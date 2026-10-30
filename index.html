@@ -1,930 +1,371 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>OP-N Digital</title>
-<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-</head>
-<body>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<title>Serdar Kakız | Aile Danışmanı · Yaşam Koçu · Yazar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* Düzen: tek sütun, sola dayalı başlıklar; kahramanın merkezinde OP-N yazısı ve gece neon yanan tire */
-:root {
-  --bg: #F2F4F8;
-  --surface: #FFFFFF;
-  --surface-2: #E7EBF3;
-  --fg: #101626;
-  --muted: #566074;
-  --line: #D3D9E5;
-  --phone: #161C30;
-  --accent: #D4283A;
-  --accent-fg: #FFFFFF;
-  --accent-soft: rgba(212, 40, 58, 0.1);
-  --neon: none;
-  --f-display: "Unbounded", "Arial Black", system-ui, sans-serif;
-  --f-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  --r: 10px;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0C1020;
-    --surface: #141A2E;
-    --surface-2: #1B2340;
-    --fg: #E9EDF7;
-    --muted: #9AA5BF;
-    --line: #28325A; --phone: #323C66;
-    --accent: #FF5A6B;
-    --accent-fg: #0C1020;
-    --accent-soft: rgba(255, 90, 107, 0.14);
-    --neon: 0 0 10px rgba(255, 90, 107, 0.85), 0 0 34px rgba(255, 90, 107, 0.5);
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0C1020;
-  --surface: #141A2E;
-  --surface-2: #1B2340;
-  --fg: #E9EDF7;
-  --muted: #9AA5BF;
-  --line: #28325A; --phone: #323C66;
-  --accent: #FF5A6B;
-  --accent-fg: #0C1020;
-  --accent-soft: rgba(255, 90, 107, 0.14);
-  --neon: 0 0 10px rgba(255, 90, 107, 0.85), 0 0 34px rgba(255, 90, 107, 0.5);
-  color-scheme: dark;
-}
-
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  background: var(--bg);
-  color: var(--fg);
-  font-family: var(--f-body);
-  font-size: 1rem;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0 0 auto;
-  height: env(safe-area-inset-top, 0px);
-  z-index: 10;
-  background: var(--bg);
-}
-h1, h2, h3, p { margin: 0; }
-a { color: inherit; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
-.wrap {
-  max-width: 1120px;
-  margin-inline: auto;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-}
-section[id] { scroll-margin-top: 4.5rem; }
-
-/* OP-N yazısı: harfler ve neon tire */
-.wm {
-  display: inline-flex;
-  align-items: center;
-  font-family: var(--f-display);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: var(--fg);
-}
-.dash {
-  display: block;
-  width: 0.42em;
-  height: 0.11em;
-  margin: 0 0.1em;
-  border-radius: 0.06em;
-  background: var(--accent);
-  box-shadow: var(--neon);
-  transform: translateY(-0.02em);
-}
-
-/* Üst çubuk */
-.top {
-  position: sticky;
-  top: env(safe-area-inset-top, 0px);
-  z-index: 5;
-  background: var(--bg);
-  border-bottom: 1px solid var(--line);
-}
-.bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-block: 0.7rem;
-}
-.logo { display: inline-flex; align-items: center; gap: 0.6rem; text-decoration: none; min-width: 0; }
-.logo .wm { font-size: 1.3rem; }
-.logo-sub {
-  font-family: var(--f-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.nav { display: none; gap: 1.75rem; }
-.nav a { font-size: 0.9rem; color: var(--muted); text-decoration: none; }
-.nav a:hover { color: var(--fg); }
-@media (min-width: 880px) { .nav { display: flex; } }
-
-.seg {
-  display: inline-flex;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 3px;
-  background: var(--surface);
-}
-.seg button {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  border: 0;
-  background: transparent;
-  color: var(--muted);
-  font: inherit;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  padding: 0.5rem 0.75rem;
-  border-radius: 999px;
-  cursor: pointer;
-}
-.seg button:hover { color: var(--fg); }
-.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-fg); }
-.seg svg { width: 1rem; height: 1rem; flex: none; }
-.theme-btn span { display: none; }
-@media (min-width: 560px) { .theme-btn span { display: inline; } }
-
-/* Kahraman */
-.hero { padding-block: clamp(2.5rem, 6vw, 5rem) clamp(3rem, 7vw, 6rem); }
-.eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-family: var(--f-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 1.5rem;
-}
-.eyebrow::before { content: ""; width: 1.6rem; height: 3px; border-radius: 2px; background: var(--accent); }
-.hero .wm { font-size: clamp(4.2rem, 17vw, 12rem); }
-.wm-sub {
-  display: block;
-  margin-top: 0.9rem;
-  font-family: var(--f-mono);
-  font-size: clamp(0.75rem, 2.2vw, 1rem);
-  letter-spacing: 0.7em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.hero-grid {
-  display: grid;
-  gap: 1.75rem 3rem;
-  grid-template-columns: minmax(0, 1fr);
-  margin-top: clamp(2rem, 5vw, 3.5rem);
-}
-@media (min-width: 900px) { .hero-grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; } }
-h1 {
-  font-family: var(--f-display);
-  font-weight: 600;
-  font-size: clamp(1.6rem, 3.8vw, 2.7rem);
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  text-wrap: balance;
-}
-.lead { color: var(--muted); font-size: 1.0625rem; max-width: 46ch; }
-.cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.85rem 1.4rem;
-  border-radius: var(--r);
-  border: 1px solid transparent;
-  font: inherit;
-  font-size: 0.95rem;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-}
-.btn-primary { background: var(--accent); color: var(--accent-fg); }
-.btn-primary:hover { filter: brightness(1.08); }
-.btn-ghost { border-color: var(--line); color: var(--fg); background: transparent; }
-.btn-ghost:hover { background: var(--surface-2); }
-
-/* Bölümler */
-.sec { padding-block: clamp(3.5rem, 8vw, 6.5rem); border-top: 1px solid var(--line); }
-.sec-head { display: grid; gap: 0.75rem; max-width: 44rem; margin-bottom: 2.25rem; }
-h2 {
-  font-family: var(--f-display);
-  font-weight: 600;
-  font-size: clamp(1.45rem, 3vw, 2.2rem);
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  text-wrap: balance;
-}
-.sec-head p { color: var(--muted); max-width: 52ch; }
-
-.rows { border-top: 1px solid var(--line); }
-.row {
-  display: grid;
-  gap: 0.6rem 2rem;
-  grid-template-columns: minmax(0, 1fr);
-  padding-block: 1.6rem;
-  border-bottom: 1px solid var(--line);
-}
-@media (min-width: 800px) {
-  .row { grid-template-columns: 11rem minmax(0, 1fr) minmax(0, 1.3fr); align-items: baseline; }
-}
-.tag {
-  font-family: var(--f-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-h3 { font-family: var(--f-display); font-weight: 600; font-size: 1.05rem; line-height: 1.3; }
-.row p { color: var(--muted); }
-
-/* Cihaz denemesi */
-.stage-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 1rem; }
-.mono-note { font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.06em; color: var(--muted); font-variant-numeric: tabular-nums; }
-.stage-area {
-  display: flex;
-  justify-content: center;
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: clamp(0.75rem, 3vw, 2rem);
-  overflow: hidden;
-}
-.frame {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--r);
-  overflow: hidden;
-  box-shadow: 0 14px 34px -16px rgba(0, 0, 0, 0.35);
-  transition: width 0.45s cubic-bezier(0.3, 0.7, 0.2, 1);
-}
-.chrome { display: flex; align-items: center; gap: 0.4rem; padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--line); background: var(--surface-2); }
-.chrome i { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--line); flex: none; }
-.chrome .url {
-  margin-left: 0.5rem;
-  font-family: var(--f-mono);
-  font-size: 0.7rem;
-  color: var(--muted);
-  background: var(--surface);
-  border-radius: 6px;
-  padding: 0.15rem 0.6rem;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.screen { container-type: inline-size; }
-.m-nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.9rem 1.1rem; border-bottom: 1px solid var(--line); }
-.m-logo { font-family: var(--f-display); font-weight: 700; font-size: 0.95rem; }
-.m-links { display: none; gap: 1.25rem; font-size: 0.85rem; color: var(--muted); }
-.m-burger { display: grid; gap: 4px; }
-.m-burger b { display: block; width: 1.2rem; height: 2px; background: var(--fg); border-radius: 1px; }
-.m-hero { padding: 1.6rem 1.1rem 1.2rem; display: grid; gap: 0.6rem; }
-.m-hero h4 { margin: 0; font-family: var(--f-display); font-weight: 600; font-size: 1.25rem; line-height: 1.25; }
-.m-hero p { margin: 0; font-size: 0.875rem; color: var(--muted); max-width: 40ch; }
-.m-hero .m-btn { justify-self: start; margin-top: 0.4rem; background: var(--accent); color: var(--accent-fg); font-size: 0.8rem; font-weight: 600; padding: 0.5rem 0.9rem; border-radius: 8px; }
-.m-cards { display: grid; gap: 0.75rem; grid-template-columns: minmax(0, 1fr); padding: 0 1.1rem 1.4rem; }
-.m-card { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg); }
-.m-swatch { height: 3.4rem; background: var(--accent-soft); display: flex; align-items: center; justify-content: center; }
-.m-swatch span { width: 1.4rem; height: 1.4rem; border-radius: 50%; background: var(--accent); }
-.m-card div:last-child { padding: 0.6rem 0.75rem; display: flex; justify-content: space-between; gap: 0.5rem; font-size: 0.85rem; }
-.m-card em { font-style: normal; font-family: var(--f-mono); font-size: 0.8rem; color: var(--muted); }
-@container (min-width: 600px) {
-  .m-links { display: flex; }
-  .m-burger { display: none; }
-  .m-hero { padding: 2.6rem 1.8rem 1.8rem; }
-  .m-hero h4 { font-size: 1.9rem; max-width: 18ch; }
-  .m-nav { padding-inline: 1.8rem; }
-  .m-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 0 1.8rem 2rem; gap: 1rem; }
-  .m-swatch { height: 5rem; }
-}
-
-/* Çalışma adımları */
-.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 2rem 1.5rem; grid-template-columns: minmax(0, 1fr); }
-@media (min-width: 640px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (min-width: 1000px) { .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-.steps li::before { content: ""; display: block; width: 2.2rem; height: 4px; border-radius: 2px; background: var(--accent); box-shadow: var(--neon); margin-bottom: 1rem; }
-.step-n { display: block; font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.4rem; }
-.steps p { color: var(--muted); margin-top: 0.5rem; font-size: 0.95rem; }
-
-/* Müşteri yorumları */
-.reviews { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 26rem)); justify-content: start; }
-.review { margin: 0; display: grid; gap: 1.1rem; align-content: space-between; padding: 1.5rem; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
-.review blockquote { margin: 0; font-size: 1.05rem; line-height: 1.55; }
-.stars { position: relative; display: inline-block; font-size: 1.15rem; line-height: 1; letter-spacing: 0.12em; white-space: nowrap; }
-.stars::before { content: "★★★★★"; color: var(--muted); opacity: 0.35; }
-.stars i { position: absolute; left: 0; top: 0; width: calc(var(--r) / 5 * 100%); overflow: hidden; font-style: normal; color: var(--accent); }
-.rating-sum { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.9rem; }
-.rating-sum strong { font-family: var(--f-display); font-size: 1.6rem; line-height: 1; }
-.review-top { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
-.review figcaption { font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-
-/* İletişim */
-.contact-grid { display: grid; gap: 2.5rem; grid-template-columns: minmax(0, 1fr); }
-@media (min-width: 900px) { .contact-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4rem; } }
-.channels { display: grid; gap: 0.75rem; margin-top: 1.5rem; }
-.chan { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.9rem; padding-block: 0.75rem; border-top: 1px solid var(--line); }
-.chan .mono-note { min-width: 5.5rem; text-transform: uppercase; letter-spacing: 0.12em; }
-.chan a, .chan strong { font-weight: 600; word-break: break-all; }
-.chan button { border: 1px solid var(--line); background: transparent; color: var(--fg); font: inherit; font-size: 0.8rem; padding: 0.3rem 0.7rem; border-radius: 999px; cursor: pointer; }
-.chan button:hover { background: var(--surface-2); }
-.soon { color: var(--muted); font-size: 0.95rem; }
-form { display: grid; gap: 1rem; padding: clamp(1.1rem, 3vw, 1.75rem); background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
-.field { display: grid; gap: 0.4rem; min-width: 0; }
-.field label { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
-.field input, .field select, .field textarea {
-  width: 100%;
-  font: inherit;
-  font-size: 1rem;
-  color: var(--fg);
-  background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: var(--r);
-  padding: 0.75rem 0.9rem;
-}
-.field textarea { min-height: 7rem; resize: vertical; }
-.out { display: grid; gap: 0.6rem; }
-.out textarea { min-height: 8rem; }
-.form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
-.hint { font-size: 0.85rem; color: var(--muted); }
-
-footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
-.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem 2rem; align-items: flex-start; }
-.foot .wm { font-size: 1.1rem; }
-.foot p { color: var(--muted); font-size: 0.85rem; max-width: 52ch; }
-.foot-left { display: grid; gap: 0.6rem; min-width: 0; }
-.social { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.4rem; }
-.social-link { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.85rem 0.4rem 0.45rem; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--fg); font-size: 0.8125rem; font-weight: 500; text-decoration: none; }
-.social-link:hover { border-color: var(--accent); }
-.social-link svg { width: 1.75rem; height: 1.75rem; padding: 0.4rem; border-radius: 50%; background: var(--accent); color: var(--accent-fg); flex: none; }
-.copyright { margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--line); font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.04em; color: var(--muted); text-align: center; }
-
-/* Müşteri hizmetleri baloncuğu */
-.cs-bubble {
-  position: fixed;
-  right: max(16px, env(safe-area-inset-right, 0px));
-  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
-  z-index: 50;
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 50%;
-  border: 0;
-  display: grid;
-  place-items: center;
-  background: var(--accent);
-  color: var(--accent-fg);
-  cursor: pointer;
-  box-shadow: 0 10px 26px -6px rgba(0, 0, 0, 0.45);
-  transition: transform 0.2s ease;
-}
-.cs-bubble:hover { transform: scale(1.06); }
-.cs-bubble svg { width: 1.6rem; height: 1.6rem; }
-.cs-bubble .ic-close { display: none; }
-.cs-bubble[aria-expanded="true"] .ic-chat { display: none; }
-.cs-bubble[aria-expanded="true"] .ic-close { display: block; }
-.cs-panel {
-  position: fixed;
-  right: max(16px, env(safe-area-inset-right, 0px));
-  bottom: calc(16px + 3.5rem + 0.75rem + env(safe-area-inset-bottom, 0px));
-  z-index: 50;
-  width: min(20rem, calc(100vw - 32px));
-  max-height: calc(100% - 7rem);
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  background: var(--surface);
-  color: var(--fg);
-  border: 7px solid var(--phone);
-  border-radius: 2.2rem;
-  box-shadow: 0 28px 56px -16px rgba(0, 0, 0, 0.55);
-  animation: csIn 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-  transform-origin: bottom right;
-}
-@keyframes csIn { from { opacity: 0; transform: translateY(10px) scale(0.96); } to { opacity: 1; transform: none; } }
-.ph-notch { align-self: center; width: 5.2rem; height: 1.15rem; background: var(--phone); border-radius: 0 0 14px 14px; flex: none; }
-.ph-head { display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 1rem 0.8rem; border-bottom: 1px solid var(--line); }
-.ph-avatar { width: 2.4rem; height: 2.4rem; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--bg); border: 1px solid var(--line); }
-.ph-avatar .wm { font-size: 0.72rem; }
-.ph-head div { display: grid; line-height: 1.25; min-width: 0; }
-.ph-head strong { font-size: 0.95rem; }
-.ph-head span { font-size: 0.78rem; color: var(--muted); }
-.ph-chat { background: var(--bg); padding: 1.1rem 1rem; min-height: 6.5rem; }
-.ph-msg { max-width: 85%; font-size: 0.9rem; line-height: 1.45; background: var(--surface-2); padding: 0.6rem 0.85rem; border-radius: 16px 16px 16px 4px; }
-.ph-input { display: flex; align-items: flex-end; gap: 0.5rem; padding: 0.7rem 0.75rem; border-top: 1px solid var(--line); background: var(--surface); }
-.ph-input textarea {
-  flex: 1;
-  min-width: 0;
-  min-height: 2.7rem;
-  max-height: 8rem;
-  resize: none;
-  font: inherit;
-  font-size: 1rem;
-  line-height: 1.4;
-  color: var(--fg);
-  background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: 1.35rem;
-  padding: 0.6rem 1rem;
-}
-.cs-send {
-  flex: none;
-  width: 2.7rem;
-  height: 2.7rem;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--accent);
-  color: var(--accent-fg);
-  text-decoration: none;
-}
-.cs-send svg { width: 1.2rem; height: 1.2rem; }
-.cs-send[aria-disabled="true"] { opacity: 0.4; pointer-events: none; }
-.cs-note { font-size: 0.74rem; line-height: 1.4; color: var(--muted); padding: 0 1rem 0.9rem; background: var(--surface); }
-@media (prefers-reduced-motion: reduce) { .cs-panel { animation: none; } .cs-bubble { transition: none; } }
-
-/* Açılış animasyonu */
-.intro {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: grid;
-  place-items: center;
-  background: var(--bg);
-  animation: introOut 0.75s cubic-bezier(0.7, 0, 0.2, 1) 3s forwards;
-  cursor: pointer;
-}
-.intro.skip { display: none; }
-.intro-mark { display: grid; justify-items: center; gap: 1rem; padding: 1rem; }
-.intro .wm { font-size: clamp(3.6rem, 16vw, 8.5rem); }
-.intro .l { opacity: 0; transform: translateY(0.45em); animation: rise 0.65s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-.intro .l1 { animation-delay: 0.15s; }
-.intro .l2 { animation-delay: 0.3s; }
-.intro .l3 { animation-delay: 0.85s; }
-.intro .dash { transform-origin: left center; transform: translateY(-0.02em) scaleX(0); animation: draw 0.45s ease-out 0.55s forwards, flick 0.9s linear 1.1s; }
-.intro-sub { opacity: 0; font-family: var(--f-mono); font-size: clamp(0.75rem, 2.4vw, 1rem); letter-spacing: 0.7em; text-transform: uppercase; color: var(--muted); padding-left: 0.7em; animation: fade 0.6s ease-out 1.2s forwards; }
-.intro-by { opacity: 0; transform: translateY(0.5em); font-size: clamp(0.85rem, 2.6vw, 1.05rem); letter-spacing: 0.08em; color: var(--muted); animation: rise 0.6s ease-out 1.65s forwards; }
-@keyframes rise { to { opacity: 1; transform: none; } }
-@keyframes draw { to { transform: translateY(-0.02em) scaleX(1); } }
-@keyframes fade { to { opacity: 1; } }
-@keyframes flick { 0%, 15%, 25%, 55%, 65%, 100% { opacity: 1; } 20%, 60% { opacity: 0.3; } }
-@keyframes introOut { 0% { clip-path: inset(0 0 0 0); } 99% { visibility: visible; } 100% { clip-path: inset(0 0 100% 0); visibility: hidden; } }
-
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .intro { animation: introOut 0.3s linear 1.3s forwards; }
-  .intro .l, .intro-sub, .intro-by { animation: none; opacity: 1; transform: none; }
-  .intro .dash { animation: none; transform: translateY(-0.02em); }
-  .frame { transition: none; }
-}
+:root{--plum:#4c6a28;--plum2:#3c5420;--deep:#1d2a0d;--gold:#eed291;--gold2:#a8842f;--cream:#f5f8ee;--card:#ffffff;--ink:#1d2a0d;--muted:#627052;--line:#dfe6cf;
+--serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;--sans:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme="dark"]{--cream:#121a0a;--card:#1c2810;--ink:#eef3e2;--muted:#b2c09c;--line:#33441f;color-scheme:dark}
+body{transition:background .3s,color .3s}
+#tema{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;width:46px;height:46px;border-radius:50%;border:1px solid var(--gold2);background:var(--plum);color:var(--gold);display:grid;place-items:center;cursor:pointer;padding:0;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+#tema svg{width:22px;height:22px}
+#tema .sun{display:none}
+:root[data-theme="dark"] #tema .sun{display:block}
+:root[data-theme="dark"] #tema .moon{display:none}
+html{scroll-behavior:smooth;scroll-padding-top:90px;height:auto}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--sans);background:var(--cream);color:var(--ink);line-height:1.6}
+a{color:inherit;text-decoration:none}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+svg.f{fill:currentColor;stroke:none}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+/* header */
+header{position:sticky;top:0;z-index:20;background:var(--plum);color:#fff;border-bottom:1px solid #3c5420}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 24px;max-width:1300px;margin:0 auto;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:14px}
+.mono{font-family:var(--serif);font-size:44px;font-weight:700;color:var(--gold);line-height:1;border:2px solid var(--gold);border-radius:50%;width:58px;height:58px;display:grid;place-items:center}
+.brand b{display:block;font-family:var(--serif);font-size:28px;letter-spacing:.12em;color:var(--gold);font-weight:600;line-height:1.1}
+.brand small{font-size:10px;letter-spacing:.2em;color:#eaf2d8}
+nav{display:flex;gap:26px;font-size:14px;flex-wrap:wrap}
+nav a{padding:8px 0;border-bottom:2px solid transparent}
+nav a:hover,nav a.on{color:var(--gold);border-color:var(--gold)}
+.soc{display:flex;align-items:center;gap:14px}
+.soc a:hover{color:var(--gold)}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--deep);padding:11px 22px;border-radius:30px;font-weight:600;font-size:14px}
+.btn:hover{background:#f3d996}
+nav{align-items:center}
+nav a.btn{border:0;padding:10px 20px}
+nav a.btn:hover{color:var(--deep);border:0}
+.btn.out{background:transparent;border:1px solid var(--gold2);color:var(--ink);padding:9px 20px}
+/* hero */
+.hero{position:relative;min-height:420px;color:#fff;display:flex;align-items:center;overflow:hidden;
+background:radial-gradient(circle at 62% 38%,#c9dc94 0,#9bb961 22%,#6f8f48 46%,#4c6a28 78%,#2f4519 100%)}
+.hero:before{content:"";position:absolute;inset:auto 0 0 0;height:45%;background:linear-gradient(to top,#1d2a0d,rgba(29,42,13,0));}
+.hero .wrap{position:relative;display:flex;justify-content:space-between;align-items:center;width:100%;gap:20px;padding-top:40px;padding-bottom:40px}
+.eyebrow{letter-spacing:.3em;font-size:12px;margin:0 0 8px}
+h1{font-family:var(--serif);font-size:clamp(40px,6vw,62px);line-height:1.05;margin:0 0 16px;font-weight:600}
+h1 em{font-style:normal;color:var(--gold)}
+.hero p.s{max-width:380px;margin:0 0 22px;font-size:16px}
+.script{font-family:"Brush Script MT","Segoe Script",cursive;font-style:italic;font-size:24px;transform:rotate(-8deg);text-align:center;max-width:230px;color:#fff3dc;line-height:1.3}
+/* services */
+.svc{display:grid;grid-template-columns:repeat(6,1fr);gap:0;padding:32px 24px}
+.svc a{text-align:center;padding:6px 14px;border-right:1px solid var(--line)}
+.svc a:last-child{border:0}
+.svc .ic{width:60px;height:60px;border-radius:50%;background:var(--plum2);color:var(--gold);display:grid;place-items:center;margin:0 auto 12px}
+.svc .ic svg{width:28px;height:28px}
+.svc b{display:block;font-size:14px}
+.svc span{font-size:12.5px;color:var(--muted)}
+.svc a:hover .ic{background:var(--gold);color:var(--deep)}
+/* about teaser */
+.ab{display:grid;grid-template-columns:1fr 1.2fr;background:var(--card)}
+.ph{position:relative;min-height:260px;background:radial-gradient(circle at 60% 35%,#749253 0,#4c6a28 45%,#243c0c 100%);color:#fff;display:flex;align-items:center;padding:30px}
+.ph q{font-family:var(--serif);font-style:italic;font-size:24px;line-height:1.35;quotes:none;display:block;max-width:260px}
+.ph cite{display:block;margin-top:14px;font-size:13px;font-style:normal;color:var(--gold)}
+.abt{display:grid;grid-template-columns:1.6fr 1fr;gap:30px;padding:36px 40px;align-items:center}
+.lbl{font-size:11px;letter-spacing:.25em;color:var(--gold2);font-weight:600}
+h2{font-family:var(--serif);font-size:34px;margin:4px 0 12px;font-weight:700}
+.abt p{font-size:14.5px;color:var(--muted);margin:0 0 16px}
+.qt{border-left:1px solid var(--line);padding-left:26px;font-family:var(--serif);font-style:italic;font-size:19px;line-height:1.35}
+.sig{font-family:"Brush Script MT","Segoe Script",cursive;font-size:26px;color:var(--gold2)}
+/* blog */
+.blog{padding:34px 24px 40px}
+.bh{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px}
+.bh h2{margin:0}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.post{background:var(--card);border-radius:8px;overflow:hidden;box-shadow:0 2px 10px rgba(42,18,56,.08)}
+.th{height:100px;position:relative}
+.tag{position:absolute;left:10px;bottom:-9px;background:var(--gold);color:var(--deep);font-size:11px;font-weight:600;padding:2px 10px;border-radius:12px}
+.post div.c{padding:18px 14px 14px}
+.post h3{font-family:var(--serif);font-size:17px;margin:0 0 8px;line-height:1.25}
+.post small{color:var(--muted);font-size:11.5px}
+/* testimonials */
+.tst{background:var(--plum);color:#fff;padding:30px 0}
+.tst .wrap{display:grid;grid-template-columns:1fr 3fr;gap:24px;align-items:center}
+.tst h2{color:#fff;font-size:30px;line-height:1.15}
+.qs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.q{background:#3c5420;border-radius:8px;padding:16px 18px;font-size:13.5px}
+.q i{color:var(--gold);font-family:var(--serif);font-size:30px;line-height:0;vertical-align:-8px;margin-right:6px;font-style:normal}
+.q p{margin:0 0 8px}
+.q span{font-size:12.5px;color:#eaf2d8}.q em{color:var(--gold);font-style:normal;letter-spacing:2px}
+/* açılış animasyonu */
+#acilis{position:fixed;inset:0;z-index:100;background:var(--plum);display:grid;place-items:center;animation:acilisKapat .7s ease 2.2s forwards}
+.ns #acilis{display:none}
+#acilis .in{text-align:center;color:var(--gold);padding:0 20px}
+#acilis .mono{width:96px;height:96px;font-size:68px;margin:0 auto 20px;animation:belir 1s ease both}
+#acilis b{display:block;font-family:var(--serif);font-size:28px;letter-spacing:.2em;font-weight:600;animation:belir 1s ease .5s both}
+#acilis small{display:block;font-size:10px;letter-spacing:.25em;color:#eaf2d8;margin-top:8px;animation:belir 1s ease 1s both}
+@keyframes belir{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes acilisKapat{to{opacity:0;visibility:hidden}}
+.js .rv{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s ease}
+.js .rv.go{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){#acilis{display:none}.js .rv{opacity:1;transform:none;transition:none}}
+/* randevu penceresi */
+.rm{position:fixed;inset:0;z-index:200;background:rgba(18,26,10,.6);display:grid;place-items:center;padding:16px;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.rm[hidden]{display:none}
+.rbox{position:relative;width:100%;max-width:440px;background:var(--card);color:var(--ink);border-radius:16px;padding:26px 22px 22px;box-shadow:0 20px 50px rgba(0,0,0,.4);animation:belir .3s ease both}
+.rbox h3{font-family:var(--serif);font-size:26px;margin:0 0 6px}
+.rbox p{font-size:14px;color:var(--muted);margin:0 0 14px}
+.rbox textarea{width:100%;min-height:150px;resize:vertical;font:inherit;font-size:16px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--cream);color:var(--ink)}
+.rbox .rx{position:absolute;right:12px;top:10px;border:0;background:none;color:var(--muted);font-size:28px;line-height:1;cursor:pointer;padding:6px 10px}
+#rhata{color:#c0392b;font-size:13px;min-height:20px;margin:4px 0 8px}
+.rbox .btn{border:0;cursor:pointer;font:inherit;font-weight:600;font-size:15px}
+/* footer */
+footer{background:var(--plum);color:#fff;border-top:1px solid var(--gold2);padding:22px 0 14px;font-size:13px}
+.ft{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.ft nav{font-size:12px;gap:20px}
+.fl{font-size:14px;font-weight:600;color:var(--gold);margin-right:6px}
+.cp{text-align:center;font-size:11.5px;color:#dfe8c9;margin-top:14px}
+.cp a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.cp a:hover{color:var(--gold)}
+/* about page */
+#page-hakkimda{display:none}
+#page-kitap{display:none}
+body.kitap #page-home{display:none}body.kitap #page-kitap{display:block}
+.post{position:relative}.sl::after{content:"";position:absolute;inset:0}.sl:hover{color:var(--gold2)}
+.geri{display:inline-block;font-size:14px;font-weight:600;color:var(--gold2);margin-bottom:18px}
+.bkl{list-style:none;margin:26px 0 0;padding:0;max-width:760px}
+.bk{display:grid;grid-template-columns:44px 1fr;gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
+.bk .no{width:44px;height:44px;border-radius:50%;background:var(--plum2);color:var(--gold);display:grid;place-items:center;font-family:var(--serif);font-size:22px;font-weight:700}
+.pg .bk h3{font-family:var(--serif);font-size:24px;margin:0}
+.bk small{color:var(--gold2);font-weight:600;font-size:13px}
+.bk p{margin:6px 0 0}
+body.about #page-home{display:none}body.about #page-hakkimda{display:block}
+.pg{padding:50px 24px}
+.pgrid{display:grid;grid-template-columns:1fr 1.5fr;gap:44px;align-items:start}
+.pgrid .ph{min-height:420px;border-radius:10px}
+.pg h3{font-family:var(--serif);font-size:24px;margin:26px 0 8px}
+.pg ul{padding-left:20px;color:var(--muted)}
+.pg p{color:var(--muted)}
+.ct{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+@media(max-width:900px){
+.svc{grid-template-columns:repeat(2,1fr);gap:20px 0}.svc a:nth-child(2n){border:0}
+.ab,.abt,.pgrid,.tst .wrap{grid-template-columns:1fr}.qt{border:0;padding:0}
+.grid,.qs{grid-template-columns:1fr 1fr}.script{display:none}
+#nav{gap:8px;font-size:12px;flex-wrap:nowrap;width:100%;justify-content:space-between}#nav a{white-space:nowrap}#nav a.btn{padding:7px 10px;font-size:12px;gap:5px}#nav a.btn svg{width:14px;height:14px}.hd{justify-content:center;padding:12px 16px}.fs{width:100%}.fs .fl{margin-right:auto}}
+@media(max-width:560px){.grid,.qs{grid-template-columns:1fr}}
 </style>
 <script>
-/* Temayı sayfa çizilmeden önce ayarla: 07:00-19:00 aydınlık, diğer saatler karanlık */
-(function () {
-  var mode = "auto";
-  try { var s = localStorage.getItem("opn-theme"); if (s === "light" || s === "dark" || s === "auto") mode = s; } catch (e) {}
-  var h = new Date().getHours();
-  var t = mode === "auto" ? (h >= 7 && h < 19 ? "light" : "dark") : mode;
-  document.documentElement.setAttribute("data-theme", t);
+(function(){
+ var K="tema-tercihi",mem=null;
+ function auto(){var h=new Date().getHours();return(h>=7&&h<19)?"light":"dark";}
+ function stored(){var v=null;try{v=JSON.parse(localStorage.getItem(K)||"null");}catch(e){}return v||mem;}
+ function current(){var a=auto(),s=stored();return(s&&s.a===a&&(s.t==="light"||s.t==="dark"))?s.t:a;}
+ function label(){var b=document.getElementById("tema");if(!b)return;var d=document.documentElement.getAttribute("data-theme")==="dark";var t=d?"Aydınlık temaya geç":"Karanlık temaya geç";b.setAttribute("aria-label",t);b.setAttribute("title",t);}
+ function apply(){document.documentElement.setAttribute("data-theme",current());label();}
+ window.temaDegistir=function(){
+  var n=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";
+  mem={t:n,a:auto()};
+  try{localStorage.setItem(K,JSON.stringify(mem));}catch(e){}
+  apply();
+ };
+ apply();
+ setInterval(apply,60000);
+ document.addEventListener("DOMContentLoaded",label);
 })();
 </script>
-
-<div class="intro" id="intro" aria-hidden="true">
-  <div class="intro-mark">
-    <span class="wm"><span class="l l1">O</span><span class="l l2">P</span><span class="dash"></span><span class="l l3">N</span></span>
-    <span class="intro-sub">Digital</span>
-    <span class="intro-by">Yiğit Ateş Sunumuyla</span>
-  </div>
+<script>
+(function(){var d=document.documentElement;d.classList.add("js");try{if(sessionStorage.getItem("acilis")){d.classList.add("ns");}else{sessionStorage.setItem("acilis","1");}}catch(e){}})();
+</script>
+</head>
+<body>
+<button id="tema" type="button" onclick="temaDegistir()" aria-label="Tema değiştir"><svg class="i moon" viewBox="0 0 24 24"><path d="M21 13.5A8.5 8.5 0 1 1 10.5 3a7 7 0 0 0 10.5 10.5z"/></svg><svg class="i sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+<div id="acilis" aria-hidden="true"><div class="in"><div class="mono">SK</div><b>SERDAR KAKIZ</b><small>AİLE DANIŞMANI | YAŞAM KOÇU | YAZAR</small></div></div>
+<div id="rmodal" class="rm" hidden role="dialog" aria-modal="true" aria-labelledby="rbaslik">
+ <div class="rbox">
+  <button type="button" class="rx" id="rkapat" aria-label="Kapat">×</button>
+  <h3 id="rbaslik">Randevu Talebi</h3>
+  <p>Mesajınızı yazın, “Gönder”e dokunduğunuzda WhatsApp açılır ve mesajınız hazır gelir.</p>
+  <textarea id="rmetin" maxlength="1000" placeholder="Örn: Merhaba, aile danışmanlığı için randevu almak istiyorum."></textarea>
+  <div id="rhata" role="alert"></div>
+  <button type="button" class="btn" id="rgonder"><svg class="i"><use href="#wa"/></svg>Gönder</button>
+ </div>
 </div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="ig" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6"/></symbol>
+<symbol id="yt" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z"/></symbol>
+<symbol id="in" viewBox="0 0 24 24"><path d="M6 9v10M6 5.5v.01M11 19v-6a3 3 0 016 0v6M11 9v10"/></symbol>
+<symbol id="ml" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+<symbol id="wa" viewBox="0 0 24 24"><path d="M3 21l1.6-4.6A8.5 8.5 0 1111.5 20.5a8.4 8.4 0 01-4-1z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.5-2-1-1 .7c-1-.4-2-1.400-2.400-2.400l.7-1-1-2z"/></symbol>
+<symbol id="ar" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></symbol>
+<symbol id="fam" viewBox="0 0 24 24"><circle cx="8" cy="7" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20v-3a5 5 0 0110 0v3M14 20v-2a4 4 0 017 0v2"/></symbol>
+<symbol id="per" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></symbol>
+<symbol id="cmp" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.500 8.500l-2 5-5 2 2-5z"/></symbol>
+<symbol id="bk" viewBox="0 0 24 24"><path d="M3 5h7a2 2 0 012 2v13a2 2 0 00-2-2H3zM21 5h-7a2 2 0 00-2 2v13a2 2 0 012-2h7z"/></symbol>
+<symbol id="pen" viewBox="0 0 24 24"><path d="M4 20l1-4L17 4l3 3L8 19zM14 7l3 3"/></symbol>
+<symbol id="hrt" viewBox="0 0 24 24"><path d="M12 20s-8-5-8-11a4.500 4.500 0 018-2.500A4.500 4.500 0 0120 9c0 6-8 11-8 11z"/></symbol>
+</svg>
 
-<header class="top" id="top">
-  <div class="wrap bar">
-    <a class="logo" href="#top" aria-label="OP-N Digital, sayfanın başı">
-      <span class="wm"><span>O</span><span>P</span><span class="dash"></span><span>N</span></span>
-      <span class="logo-sub">Digital</span>
-    </a>
-    <nav class="nav" aria-label="Bölümler">
-      <a href="#hizmetler">Hizmetler</a>
-      <a href="#uyum">Mobil ve PC</a>
-      <a href="#surec">Süreç</a>
-      <a href="#iletisim">İletişim</a>
-    </nav>
-    <div class="seg" role="group" aria-label="Tema">
-      <button type="button" class="theme-btn" data-mode="auto" aria-pressed="true" aria-label="Otomatik tema">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Otomatik</span>
-      </button>
-      <button type="button" class="theme-btn" data-mode="light" aria-pressed="false" aria-label="Aydınlık tema">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span>Aydınlık</span>
-      </button>
-      <button type="button" class="theme-btn" data-mode="dark" aria-pressed="false" aria-label="Karanlık tema">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></svg><span>Karanlık</span>
-      </button>
-    </div>
-  </div>
+<header>
+<div class="hd">
+ <a class="logo" href="#anasayfa"><span class="mono">SK</span><span class="brand"><b>SERDAR KAKIZ</b><small>AİLE DANIŞMANI | YAŞAM KOÇU | YAZAR</small></span></a>
+ <nav id="nav">
+  <a href="#anasayfa" data-v="anasayfa">Ana Sayfa</a>
+  <a href="#hakkimda" data-v="hakkimda">Hakkımda</a>
+  <a href="#hizmetler">Hizmetler</a>
+  <a href="#blog">Blog</a>
+  <a class="btn" href="#randevu" role="button"><svg class="i"><use href="#cal"/></svg>Randevu Al</a>
+ </nav>
+</div>
 </header>
 
-<main>
-  <section class="hero">
-    <div class="wrap">
-      <p class="eyebrow">Web tasarım ve kurulum</p>
-      <div class="wm" role="img" aria-label="OP-N"><span>O</span><span>P</span><span class="dash"></span><span>N</span></div>
-      <span class="wm-sub">Digital</span>
-      <div class="hero-grid">
-        <h1>Sitenizi sizin için baştan sona kuruyoruz.</h1>
-        <div>
-          <p class="lead">İşletmeniz, markanız ya da projeniz için siteyi isteğinize göre tasarlarız. Site telefonda da bilgisayarda da düzgün açılır.</p>
-          <div class="cta">
-            <a class="btn btn-primary" href="#iletisim">Proje başlat</a>
-            <a class="btn btn-ghost" href="#hizmetler">Neler yapıyoruz</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+<main id="page-home">
+<section class="hero" id="anasayfa"><div class="wrap">
+ <div>
+  <p class="eyebrow">AİLE, EN GÜÇLÜ BAĞIMIZDIR</p>
+  <h1>Konuşalım,<br>Anlayalım,<br><em>Güçlenelim.</em></h1>
+  <p class="s">Aile ilişkilerinde sağlıklı iletişim, güçlü bireyler ve mutlu yarınlar için yanınızdayım.</p>
+  <a class="btn" href="#hizmetler">Hizmetlerimi Keşfedin <svg class="i"><use href="#ar"/></svg></a>
+ </div>
+ <div class="script">Her aile<br>kendi hikayesini<br>yazabilir...</div>
+</div></section>
 
-  <section class="sec" id="hizmetler">
-    <div class="wrap">
-      <div class="sec-head">
-        <h2>Neler yapıyoruz</h2>
-        <p>Yazılım bilmeniz gerekmez. Siteyle ilgili teknik işleri biz üstleniriz, siz işinize bakarsınız.</p>
-      </div>
-      <div class="rows">
-        <div class="row">
-          <span class="tag">Kurulum</span>
-          <h3>Web sitesi kurulumu</h3>
-          <p>Boş sayfadan yayına kadar siteyi biz kurarız. Sayfaları, yazıları ve görselleri yerleştirir, siteyi çalışır halde teslim ederiz.</p>
-        </div>
-        <div class="row">
-          <span class="tag">İsteğe özel</span>
-          <h3>Sizin istediğiniz gibi</h3>
-          <p>Önce işinizi ve beklentinizi dinleriz. Renkleri, yapıyı ve içeriği sizinle birlikte belirler, siteyi buna göre hazırlarız.</p>
-        </div>
-        <div class="row">
-          <span class="tag">Uyum</span>
-          <h3>Mobil ve PC uyumlu</h3>
-          <p>Her site telefon, tablet ve bilgisayarda tek tek denenir. Ekran küçülünce de büyüyünce de düzen bozulmaz.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+<section class="wrap svc" id="hizmetler">
+ <a href="#hizmetler"><div class="ic"><svg class="i"><use href="#fam"/></svg></div><b>Aile Danışmanlığı</b><span>Sağlıklı ilişkiler,<br>mutlu aileler</span></a>
+ <a href="#hizmetler"><div class="ic"><svg class="i"><use href="#per"/></svg></div><b>Bireysel Danışmanlık</b><span>Kendini tanı,<br>hayata yön ver</span></a>
+ <a href="#hizmetler"><div class="ic"><svg class="i"><use href="#cmp"/></svg></div><b>Yaşam Koçluğu</b><span>Hedeflerine giden<br>yolda destek</span></a>
+ <a href="#hizmetler"><div class="ic"><svg class="i"><use href="#bk"/></svg></div><b>Eğitim &amp; Seminer</b><span>Bilgiyle güçlen,<br>geleceğini şekillendir</span></a>
+ <a href="#blog"><div class="ic"><svg class="i"><use href="#pen"/></svg></div><b>Yazar</b><span>Düşün, hisset,<br>yaz...</span></a>
+ <a href="https://wa.me/905443913120?text=Merhaba%20siteniz%20%C3%BCzerinden%20size%20ula%C5%9F%C4%B1yorum" target="_blank" rel="noopener"><div class="ic"><svg class="i"><use href="#hrt"/></svg></div><b>Online Randevu</b><span>Size uygun<br>zamanı seçin</span></a>
+</section>
 
-  <section class="sec" id="uyum">
-    <div class="wrap">
-      <div class="sec-head">
-        <h2>Aynı site, her ekranda</h2>
-        <p>Aşağıdaki örnek taslağı farklı ekran boylarında deneyin. Menü, başlık ve kartlar ekrana göre kendini yeniden dizer.</p>
-      </div>
-      <div class="stage-bar">
-        <div class="seg" role="group" aria-label="Ekran boyutu">
-          <button type="button" class="dev-btn" data-w="390" aria-pressed="false">Telefon</button>
-          <button type="button" class="dev-btn" data-w="768" aria-pressed="false">Tablet</button>
-          <button type="button" class="dev-btn" data-w="0" aria-pressed="true">Bilgisayar</button>
-        </div>
-        <span class="mono-note" id="wlabel" aria-live="polite">Örnek taslak</span>
-      </div>
-      <div class="stage-area">
-        <div class="frame" id="frame">
-          <div class="chrome"><i></i><i></i><i></i><span class="url">ornek-kafe.com</span></div>
-          <div class="screen">
-            <div class="m-nav">
-              <span class="m-logo">Kahve Atölyesi</span>
-              <span class="m-links"><span>Menü</span><span>Hakkımızda</span><span>İletişim</span></span>
-              <span class="m-burger" aria-hidden="true"><b></b><b></b><b></b></span>
-            </div>
-            <div class="m-hero">
-              <h4>Her sabah taze kavrulmuş kahve</h4>
-              <p>Küçük partilerle kavurduğumuz çekirdekleri kapınıza getiriyoruz.</p>
-              <span class="m-btn">Menüyü gör</span>
-            </div>
-            <div class="m-cards">
-              <div class="m-card"><div class="m-swatch"><span></span></div><div><span>Filtre kahve</span><em>140 ₺</em></div></div>
-              <div class="m-card"><div class="m-swatch"><span></span></div><div><span>Espresso</span><em>110 ₺</em></div></div>
-              <div class="m-card"><div class="m-swatch"><span></span></div><div><span>Soğuk demleme</span><em>160 ₺</em></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+<section class="ab">
+ <div class="ph"><div><q>“İyi bir dinleyici olmak, iyi bir danışmanın en güçlü yönüdür.”</q><cite>Serdar Kakız</cite></div></div>
+ <div class="abt">
+  <div>
+   <div class="lbl">HAKKIMDA</div><h2>Serdar Kakız</h2>
+   <p>Aile danışmanı, yaşam koçu ve yazar olarak; bireylerin, ailelerin ve toplumun daha sağlıklı, huzurlu ve güçlü olmasına katkı sağlamayı amaçlıyorum. İnsanların kendilerini daha iyi anlamalarına, ilişkilerini güçlendirmelerine ve hayatlarını bilinçli bir şekilde yönlendirmelerine destek oluyorum.</p>
+   <a class="btn out" href="#hakkimda">Hakkımda Daha Fazla <svg class="i"><use href="#ar"/></svg></a>
+  </div>
+  <div class="qt">“Her insan değişebilir, her aile güçlenebilir, her hayat yeniden yazılabilir.”<div class="sig">S. Kakız</div></div>
+ </div>
+</section>
 
-  <section class="sec" id="surec">
-    <div class="wrap">
-      <div class="sec-head">
-        <h2>Nasıl çalışıyoruz</h2>
-        <p>Dört adımda ilerleriz. Siz onaylamadan bir sonraki adıma geçmeyiz.</p>
-      </div>
-      <ol class="steps">
-        <li><span class="step-n">1 / 4</span><h3>Konuşuruz</h3><p>İşinizi, hedeflerinizi ve sitede olmasını istediklerinizi dinleriz.</p></li>
-        <li><span class="step-n">2 / 4</span><h3>Taslak</h3><p>Sitenin yapısını ve görünümünü sizinle netleştiririz.</p></li>
-        <li><span class="step-n">3 / 4</span><h3>Kurulum ve test</h3><p>Siteyi kurar, telefonda ve bilgisayarda tek tek deneriz.</p></li>
-        <li><span class="step-n">4 / 4</span><h3>Yayın</h3><p>Site yayına girer, doğru açıldığını birlikte kontrol ederiz.</p></li>
-      </ol>
-    </div>
-  </section>
+<section class="wrap blog" id="blog">
+ <div class="bh"><div><div class="lbl">BLOG</div><h2>Son Yazılarım</h2></div><a href="#blog" style="font-size:13px;font-weight:600">Tüm Yazıları Gör →</a></div>
+ <div class="grid">
+  <article class="post"><div class="th" style="background:linear-gradient(#f2b27a,#8a4a5a)"><span class="tag">Aile &amp; İlişkiler</span></div><div class="c"><h3>Aile İçi İletişimi Güçlendiren 5 Etkili Yöntem</h3><small>12 Ekim 2026 • 5 dk okuma</small></div></article>
+  <article class="post"><div class="th" style="background:linear-gradient(#8aa0c0,#4a5a6a)"><span class="tag">Kişisel Gelişim</span></div><div class="c"><h3>Kendini Tanımak, Hayatını Yönlendirmektir</h3><small>10 Ekim 2026 • 4 dk okuma</small></div></article>
+  <article class="post"><div class="th" style="background:linear-gradient(#a8b36a,#2f4a2a)"><span class="tag">Psikoloji</span></div><div class="c"><h3>Duygusal Zeka ve İlişkilerdeki Önemi</h3><small>8 Ekim 2026 • 6 dk okuma</small></div></article>
+  <article class="post"><div class="th" style="background:linear-gradient(#c58a5a,#4a2a1a)"><span class="tag">Kitap &amp; Tavsiye</span></div><div class="c"><h3><a class="sl" href="#kitap-onerileri">İlham Veren 5 Kitap Önerisi</a></h3><small>5 Ekim 2026 • 5 dk okuma</small></div></article>
+ </div>
+</section>
 
-  <section class="sec" id="yorumlar">
-    <div class="wrap">
-      <div class="sec-head">
-        <h2>Müşterilerimiz ne diyor</h2>
-        <div class="rating-sum">
-          <strong>4,7</strong>
-          <span class="stars" style="--r:4.73" role="img" aria-label="5 üzerinden 4,7 puan"><i aria-hidden="true">★★★★★</i></span>
-          <span class="mono-note">5 üzerinden · 3 yoruma göre</span>
-        </div>
-      </div>
-      <div class="reviews">
-        <figure class="review">
-          <div class="review-top">
-            <span class="stars" style="--r:4.5" role="img" aria-label="5 üzerinden 4,5 puan"><i aria-hidden="true">★★★★★</i></span>
-            <span class="mono-note">4,5</span>
-          </div>
-          <blockquote>“Sitemiz için OP-N Digital’e başvurduk ve sistemlerinden memnun kaldık. Profesyonel ve hızlı çalışıyorlar.”</blockquote>
-          <figcaption>Elif K.</figcaption>
-        </figure>
-        <figure class="review">
-          <div class="review-top">
-            <span class="stars" style="--r:4.7" role="img" aria-label="5 üzerinden 4,7 puan"><i aria-hidden="true">★★★★★</i></span>
-            <span class="mono-note">4,7</span>
-          </div>
-          <blockquote>“Bu firmayı keşfettiğimden beri blog sayfalarımın bile siparişini buradan veriyorum. Samimiyetleri için OP-N Digital’e teşekkür ediyorum.”</blockquote>
-          <figcaption>Buğlem P.</figcaption>
-        </figure>
-        <figure class="review">
-          <div class="review-top">
-            <span class="stars" style="--r:5" role="img" aria-label="5 üzerinden 5 puan"><i aria-hidden="true">★★★★★</i></span>
-            <span class="mono-note">5,0</span>
-          </div>
-          <blockquote>“İşletmem için WEB sitesine ihtiyacım vardı ve OP-N Digital bu konuda oldukça iyimser şekilde yardımcı oldu. Eksiklerimi bu firmayla tamamladığım için minnettarım.”</blockquote>
-          <figcaption>Atlas D.</figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec" id="iletisim">
-    <div class="wrap contact-grid">
-      <div>
-        <div class="sec-head" style="margin-bottom:0">
-          <h2>Projenizi anlatın</h2>
-          <p>Nasıl bir site istediğinizi birkaç cümleyle yazın. Gönder'e basınca e-posta uygulamanız yazdığınız mesajla açılır, orada gönder tuşuna basmanız yeterli.</p>
-        </div>
-        <div class="channels" id="channels"></div>
-      </div>
-      <form id="brief" novalidate>
-        <div class="field">
-          <label for="f-name">Adınız</label>
-          <input id="f-name" type="text" autocomplete="name" placeholder="Adınız ve soyadınız">
-        </div>
-        <div class="field">
-          <label for="f-type">Site türü</label>
-          <select id="f-type">
-            <option>Tanıtım sitesi</option>
-            <option>Kurumsal site</option>
-            <option>Portfolyo sitesi</option>
-            <option>Henüz emin değilim</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="f-msg">Neler istiyorsunuz?</label>
-          <textarea id="f-msg" placeholder="İşiniz nedir, sitede neler olsun istiyorsunuz?"></textarea>
-        </div>
-        <div class="form-actions">
-          <button class="btn btn-primary" type="submit">E-posta ile gönder</button>
-          <span class="hint" id="form-hint"></span>
-        </div>
-        <div class="out" id="out" hidden>
-          <div class="field">
-            <label for="f-out">E-postadaki mesajınız</label>
-            <textarea id="f-out" readonly></textarea>
-          </div>
-          <p class="hint">Alıcı: <strong>opancial@icloud.com</strong>. E-posta uygulamanız açıldıysa orada gönder tuşuna basın. Açılmadıysa mesajı kopyalayıp bu adrese kendiniz gönderebilirsiniz.</p>
-          <div class="form-actions">
-            <a class="btn btn-primary" id="mail-link" href="#">E-posta uygulamasını aç</a>
-            <button class="btn btn-ghost" type="button" id="copy">Mesajı kopyala</button>
-            <span class="hint" id="copy-hint" aria-live="polite"></span>
-          </div>
-        </div>
-      </form>
-    </div>
-  </section>
+<section class="tst"><div class="wrap">
+ <div><div class="lbl" style="color:var(--gold)">DANIŞAN YORUMLARI</div><h2>Onların Güvenini Kazandık</h2></div>
+ <div class="qs">
+  <div class="q"><p><i>“</i>Serdar Bey, hayatımda yeni bir dönemin kapısını açtı. Kendimi daha iyi tanıyor ve daha güçlü hissediyorum.”</p><span>— Elif K. <em>★★★★★</em></span></div>
+  <div class="q"><p><i>“</i>Ailemiz için aldığımız danışmanlık süreci, ilişkilerimizi çok olumlu etkiledi. Her şey için teşekkür ederiz.”</p><span>— Mehmet T. <em>★★★★★</em></span></div>
+  <div class="q"><p><i>“</i>Sorduğum her soruya sabırla ve profesyonel bir şekilde yanıt verdi. Kesinlikle tavsiye ediyorum.”</p><span>— Zeynep D. <em>★★★★★</em></span></div>
+ </div>
+</div></section>
 </main>
 
-<footer>
-  <div class="wrap foot">
-    <div class="foot-left">
-      <span class="wm"><span>O</span><span>P</span><span class="dash"></span><span>N</span></span>
-      <p>OP-N Digital · Web sitesi kurulumu, isteğe özel tasarım, mobil ve PC uyumlu siteler.</p>
-      <div class="social" aria-label="Bize ulaşın">
-        <a class="social-link" href="https://wa.me/905399443067" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z"/></svg>
-          <span>WhatsApp</span>
-        </a>
-        <a class="social-link" href="mailto:opancial@icloud.com">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-          <span>E-posta</span>
-        </a>
-      </div>
-    </div>
+<main id="page-hakkimda"><div class="wrap pg">
+ <div class="pgrid">
+  <div class="ph"><div><q>“İyi bir dinleyici olmak, iyi bir danışmanın en güçlü yönüdür.”</q><cite>Serdar Kakız</cite></div></div>
+  <div>
+   <div class="lbl">HAKKIMDA</div><h2 style="font-size:44px">Serdar Kakız</h2>
+   <p>Aile danışmanı, yaşam koçu ve yazar. Bireylerin, ailelerin ve toplumun daha sağlıklı, huzurlu ve güçlü olmasına katkı sağlamayı amaçlıyorum. İnsanların kendilerini daha iyi anlamalarına, ilişkilerini güçlendirmelerine ve hayatlarını bilinçli bir şekilde yönlendirmelerine destek oluyorum.</p>
+   <h3>Çalışma Alanlarım</h3>
+   <ul><li>Aile danışmanlığı</li><li>Bireysel danışmanlık</li><li>Yaşam koçluğu</li><li>Eğitim ve seminerler</li><li>Yazarlık</li></ul>
+   <h3>Yaklaşımım</h3>
+   <p>“Her insan değişebilir, her aile güçlenebilir, her hayat yeniden yazılabilir.” İnanıyorum ki sağlıklı iletişim, güçlü ilişkilerin temelidir.</p>
+   <!-- BURAYA: eğitim, sertifika ve deneyim bilgilerinizi ekleyebilirsiniz -->
+   <div class="ct">
+    <a class="btn" href="https://wa.me/905443913120?text=Merhaba%20siteniz%20%C3%BCzerinden%20size%20ula%C5%9F%C4%B1yorum" target="_blank" rel="noopener"><svg class="i"><use href="#wa"/></svg>WhatsApp ile Yaz</a>
+    <a class="btn out" href="#anasayfa">← Ana Sayfaya Dön</a>
+   </div>
   </div>
-  <div class="wrap">
-    <p class="copyright">Sitenin bütün hakları OP-N Digital'e aittir.</p>
-  </div>
-</footer>
+ </div>
+</div></main>
 
-<button type="button" class="cs-bubble" id="cs-bubble" aria-expanded="false" aria-controls="cs-panel" aria-label="Müşteri hizmetleri">
-  <svg class="ic-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z"/></svg>
-  <svg class="ic-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-</button>
-<div class="cs-panel" id="cs-panel" role="dialog" aria-label="Müşteri hizmetleri" hidden>
-  <div class="ph-notch" aria-hidden="true"></div>
-  <div class="ph-head">
-    <span class="ph-avatar" aria-hidden="true"><span class="wm"><span>O</span><span class="dash"></span><span>N</span></span></span>
-    <div><strong>OP-N Digital</strong><span>Müşteri hizmetleri</span></div>
+<main id="page-kitap"><div class="wrap pg">
+ <a class="geri" href="#blog">← Blog’a Dön</a>
+ <div class="lbl">KİTAP &amp; TAVSİYE</div>
+ <h2 style="font-size:40px">İlham Veren 5 Kitap Önerisi</h2>
+ <p style="max-width:640px">Kendini tanımak, iyi iletişim kurmak ve hayatına yön vermek isteyenler için beş kitap.</p>
+ <ol class="bkl">
+  <li class="bk"><span class="no">1</span><div><h3>Müthiş Psikoloji</h3><small>Destek Yayınları</small><p>Zihinsel sağlık ve kişisel gelişim üzerine, uzman psikologların hazırladığı bir kitap serisi. “Hayır Diyebilme Sanatı”, “Dünyaya Değil Kendine Meydan Oku” ve “Seni Yoran Her Şeyi Bırak” gibi kitaplar, kendini tanımak ve iç dünyasıyla barışmak isteyenlere yol gösterir.</p></div></li>
+  <li class="bk"><span class="no">2</span><div><h3>TED Gibi Konuş</h3><small>Carmine Gallo · Aganta Kitap</small><p>Yüzden fazla TED konuşmasını inceleyerek, topluluk önünde etkili konuşmanın dokuz sırrını anlatır. Fikirlerini daha güçlü ve akılda kalıcı biçimde aktarmak isteyen herkes için pratik bir rehberdir.</p></div></li>
+  <li class="bk"><span class="no">3</span><div><h3>Sınırsız Güç</h3><small>Anthony Robbins · İnkılap Kitabevi</small><p>Kişisel başarıda zirveye ulaşmanın yolunu anlatan, kişisel gelişim alanının tanınmış kitaplarından biri. İnsanın kendi içindeki gücü keşfetmesini ve alışkanlıklarını bilinçle değiştirmesini hedefler.</p></div></li>
+  <li class="bk"><span class="no">4</span><div><h3>İktidar: Güç Sahibi Olmanın 48 Yasası</h3><small>Robert Greene &amp; Joost Elffers · Altın Kitaplar</small><p>Güç ve etki kavramını tarihten örneklerle 48 yasa üzerinden işler. Tartışmalı bir kitap olduğu için eleştirel bir gözle okunmalı. Yine de insan ilişkilerindeki güç oyunlarını ve manipülasyonu fark etmeye yardımcı olabilir.</p></div></li>
+  <li class="bk"><span class="no">5</span><div><h3>Kırmızı Kitap</h3><small>C. G. Jung · Kaknüs Yayınları</small><p>Jung’un 1914 ile 1930 arasında kaleme aldığı, kendi resimleriyle bezeli içsel yolculuk kaydı (Liber Novus). Kolektif bilinçdışı gibi fikirlerinin ortaya çıkışını anlatır; ilk kez 2009’da yayımlandı.</p></div></li>
+ </ol>
+ <div class="ct"><a class="btn out" href="#blog">← Blog’a Dön</a></div>
+</div></main>
+
+<footer id="iletisim"><div class="wrap">
+ <div class="ft">
+  <a class="logo" href="#anasayfa"><span class="mono" style="width:46px;height:46px;font-size:32px">SK</span><span class="brand"><b style="font-size:20px">SERDAR KAKIZ</b><small>AİLE DANIŞMANI | YAŞAM KOÇU | YAZAR</small></span></a>
+  
+  <div class="soc fs"><span class="fl">İletişim:</span>
+   <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><svg class="i"><use href="#ig"/></svg></a>
+   <a href="https://youtube.com/@opncial?si=pbUAHxJXvrZGl8AV" target="_blank" rel="noopener" aria-label="YouTube"><svg class="i"><use href="#yt"/></svg></a>
+   
+   <a href="https://wa.me/905443913120?text=Merhaba%20siteniz%20%C3%BCzerinden%20size%20ula%C5%9F%C4%B1yorum" target="_blank" rel="noopener" aria-label="WhatsApp"><svg class="i"><use href="#wa"/></svg></a>
+   <a href="mailto:info@ornek.com" aria-label="E-posta"><svg class="i"><use href="#ml"/></svg></a>
   </div>
-  <div class="ph-chat">
-    <p class="ph-msg">Merhaba! Sorununuzu veya sorunuzu yazın, WhatsApp üzerinden size dönelim.</p>
-  </div>
-  <div class="ph-input">
-    <textarea id="cs-msg" rows="1" placeholder="Mesajınızı yazın" aria-label="Mesajınız"></textarea>
-    <a class="cs-send" id="cs-send" href="#" target="_blank" rel="noopener" aria-disabled="true" aria-label="WhatsApp'ta gönder" title="WhatsApp'ta gönder">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
-    </a>
-  </div>
-  <p class="cs-note">Gönder'e basınca WhatsApp açılır ve mesajınız hazır gelir. Göndermek için orada da gönder tuşuna basmanız gerekir.</p>
-</div>
+  <div class="script" style="font-size:20px;transform:rotate(-6deg)">Konuşalım,<br>Anlayalım,<br>Güçlenelim.</div>
+ </div>
+ <div class="cp">© 2026 Serdar Kakız. <a href="https://wa.me/905399443067?text=Merhaba%20tasarlad%C4%B1%C4%9F%C4%B1n%C4%B1z%20bir%20siteden%20size%20ula%C5%9F%C4%B1yorum" target="_blank" rel="noopener">Tüm Hakları OP-N Digital ile saklıdır.</a></div>
+</div></footer>
 
 <script>
-(function () {
-  /* İletişim bilgileri: boş bırakılanlar sayfada görünmez */
-  var CONTACT = { email: "opancial@icloud.com", whatsapp: "", instagram: "" };
-
-  var root = document.documentElement;
-  var KEY = "opn-theme";
-  var mode = "auto";
-  try { var s = localStorage.getItem(KEY); if (s === "light" || s === "dark" || s === "auto") mode = s; } catch (e) {}
-
-  function autoTheme() { var h = new Date().getHours(); return h >= 7 && h < 19 ? "light" : "dark"; }
-  function applyTheme() {
-    var t = mode === "auto" ? autoTheme() : mode;
-    root.setAttribute("data-theme", t);
-    var btns = document.querySelectorAll(".theme-btn");
-    for (var i = 0; i < btns.length; i++) btns[i].setAttribute("aria-pressed", String(btns[i].getAttribute("data-mode") === mode));
-  }
-  var themeBtns = document.querySelectorAll(".theme-btn");
-  for (var i = 0; i < themeBtns.length; i++) {
-    themeBtns[i].addEventListener("click", function () {
-      mode = this.getAttribute("data-mode");
-      try { localStorage.setItem(KEY, mode); } catch (e) {}
-      applyTheme();
-    });
-  }
-  applyTheme();
-  setInterval(function () { if (mode === "auto") applyTheme(); }, 30000);
-
-  /* Açılış animasyonunu kaldır */
-  var intro = document.getElementById("intro");
-  function endIntro() { if (intro) { intro.classList.add("skip"); intro.parentNode && intro.parentNode.removeChild(intro); intro = null; } }
-  intro.addEventListener("click", endIntro);
-  document.addEventListener("keydown", function () { endIntro(); });
-  setTimeout(endIntro, 4000);
-
-  /* Ekran boyutu denemesi */
-  var frame = document.getElementById("frame");
-  var wlabel = document.getElementById("wlabel");
-  var devBtns = document.querySelectorAll(".dev-btn");
-  function showWidth() {
-    var w = Math.round(frame.getBoundingClientRect().width);
-    wlabel.textContent = "Örnek taslak · genişlik " + w + " px";
-  }
-  for (var j = 0; j < devBtns.length; j++) {
-    devBtns[j].addEventListener("click", function () {
-      var w = parseInt(this.getAttribute("data-w"), 10);
-      frame.style.width = w ? w + "px" : "100%";
-      for (var k = 0; k < devBtns.length; k++) devBtns[k].setAttribute("aria-pressed", String(devBtns[k] === this));
-    });
-  }
-  if (window.ResizeObserver) { new ResizeObserver(showWidth).observe(frame); } else { window.addEventListener("resize", showWidth); }
-  showWidth();
-
-  /* İletişim kanalları */
-  var ch = document.getElementById("channels");
-  function chanRow(label, inner) {
-    var d = document.createElement("div"); d.className = "chan";
-    var l = document.createElement("span"); l.className = "mono-note"; l.textContent = label;
-    d.appendChild(l); d.appendChild(inner); return d;
-  }
-  var any = false;
-  if (CONTACT.email) {
-    any = true;
-    var wrapE = document.createElement("span"); wrapE.style.display = "contents";
-    var strong = document.createElement("strong"); strong.textContent = CONTACT.email;
-    var cb = document.createElement("button"); cb.type = "button"; cb.textContent = "Kopyala";
-    cb.addEventListener("click", function () {
-      var done = function () { cb.textContent = "Kopyalandı"; };
-      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(CONTACT.email).then(done, function () { cb.textContent = "Elle kopyalayın"; });
-      else cb.textContent = "Elle kopyalayın";
-    });
-    wrapE.appendChild(strong); wrapE.appendChild(cb);
-    ch.appendChild(chanRow("E-posta", wrapE));
-  }
-  if (CONTACT.whatsapp) {
-    any = true;
-    var a = document.createElement("a"); a.href = "https://wa.me/" + CONTACT.whatsapp.replace(/\D/g, ""); a.target = "_blank"; a.rel = "noopener"; a.textContent = "WhatsApp'tan yaz";
-    ch.appendChild(chanRow("WhatsApp", a));
-  }
-  if (CONTACT.instagram) {
-    any = true;
-    var ig = document.createElement("a"); ig.href = "https://instagram.com/" + CONTACT.instagram.replace(/^@/, ""); ig.target = "_blank"; ig.rel = "noopener"; ig.textContent = "@" + CONTACT.instagram.replace(/^@/, "");
-    ch.appendChild(chanRow("Instagram", ig));
-  }
-  if (!any) { var p = document.createElement("p"); p.className = "soon"; p.textContent = "İletişim kanalları çok yakında burada olacak."; ch.appendChild(p); }
-
-  /* Mesaj hazırlama */
-  var form = document.getElementById("brief");
-  var out = document.getElementById("out");
-  var fout = document.getElementById("f-out");
-  var hint = document.getElementById("form-hint");
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    var name = document.getElementById("f-name").value.trim();
-    var type = document.getElementById("f-type").value;
-    var msg = document.getElementById("f-msg").value.trim();
-    if (!msg) { hint.textContent = "Lütfen ne istediğinizi kısaca yazın."; document.getElementById("f-msg").focus(); return; }
-    hint.textContent = "";
-    var subject = "OP-N Digital proje talebi: " + type + (name ? " (" + name + ")" : "");
-    var href = "mailto:opancial@icloud.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(document.getElementById("f-msg").value);
-    fout.value = document.getElementById("f-msg").value;
-    document.getElementById("mail-link").href = href;
-    out.hidden = false;
-    var go = document.createElement("a");
-    go.href = href;
-    document.body.appendChild(go);
-    go.click();
-    document.body.removeChild(go);
-  });
-  document.getElementById("copy").addEventListener("click", function () {
-    var ch2 = document.getElementById("copy-hint");
-    var fallback = function () { fout.focus(); fout.select(); ch2.textContent = "Metin seçildi, kopyalayabilirsiniz."; };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(fout.value).then(function () { ch2.textContent = "Kopyalandı."; }, fallback);
-    } else { fallback(); }
-  });
-
-  /* Müşteri hizmetleri: yazılan mesaj olduğu gibi WhatsApp'a taşınır */
-  var WA_NUMBER = "905399443067";
-  var csBubble = document.getElementById("cs-bubble");
-  var csPanel = document.getElementById("cs-panel");
-  var csMsg = document.getElementById("cs-msg");
-  var csSend = document.getElementById("cs-send");
-  function csUpdate() {
-    var v = csMsg.value;
-    if (v.trim()) {
-      csSend.href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(v);
-      csSend.setAttribute("aria-disabled", "false");
-      csSend.removeAttribute("tabindex");
-    } else {
-      csSend.href = "#";
-      csSend.setAttribute("aria-disabled", "true");
-      csSend.setAttribute("tabindex", "-1");
-    }
-  }
-  function csToggle(open) {
-    csPanel.hidden = !open;
-    csBubble.setAttribute("aria-expanded", String(open));
-    if (open) csMsg.focus();
-  }
-  csBubble.addEventListener("click", function () { csToggle(csPanel.hidden); });
-  csMsg.addEventListener("input", function () {
-    csMsg.style.height = "auto";
-    csMsg.style.height = Math.min(csMsg.scrollHeight, 128) + "px";
-    csUpdate();
-  });
-  csSend.addEventListener("click", function (e) { if (csSend.getAttribute("aria-disabled") === "true") e.preventDefault(); });
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !csPanel.hidden) { csToggle(false); csBubble.focus(); } });
-  csUpdate();
+(function(){
+ function route(){
+  var h=(location.hash||"#anasayfa").slice(1);
+  var about=h==="hakkimda",kitap=h==="kitap-onerileri";
+  document.body.classList.toggle("about",about);
+  document.body.classList.toggle("kitap",kitap);
+  var links=document.querySelectorAll("#nav a[data-v]");
+  for(var i=0;i<links.length;i++){links[i].classList.toggle("on",links[i].getAttribute("data-v")===(about?"hakkimda":(kitap?"-":"anasayfa")));}
+  if(about||kitap){window.scrollTo(0,0);return;}
+  var el=document.getElementById(h);
+  if(el){setTimeout(function(){el.scrollIntoView();},0);}else{window.scrollTo(0,0);}
+ }
+ window.addEventListener("hashchange",route);route();
 })();
 </script>
-
+<script>
+(function(){
+ var d=document.documentElement,i;
+ if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+ var hero=document.querySelectorAll(".hero .wrap > div:first-child");
+ var others=document.querySelectorAll(".svc a,.ab .ph,.ab .abt,.blog .bh,.post,.tst .wrap > div:first-child,.q");
+ for(i=0;i<hero.length;i++){hero[i].classList.add("rv");}
+ for(i=0;i<others.length;i++){others[i].classList.add("rv");others[i].style.transitionDelay=((i%6)*0.1)+"s";}
+ setTimeout(function(){for(var k=0;k<hero.length;k++){hero[k].classList.add("go");}},d.classList.contains("ns")?150:2500);
+ if(!("IntersectionObserver" in window)){for(i=0;i<others.length;i++){others[i].classList.add("go");}return;}
+ var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("go");io.unobserve(e.target);}});},{threshold:0.12});
+ for(i=0;i<others.length;i++){io.observe(others[i]);}
+})();
+</script>
+<script>
+(function(){
+ var m=document.getElementById("rmodal"),t=document.getElementById("rmetin"),h=document.getElementById("rhata"),b=document.querySelector("#nav a.btn");
+ if(!m||!b)return;
+ function ac(){m.hidden=false;document.body.style.overflow="hidden";h.textContent="";setTimeout(function(){t.focus();},60);}
+ function kapat(){m.hidden=true;document.body.style.overflow="";}
+ b.addEventListener("click",function(e){e.preventDefault();ac();});
+ document.getElementById("rkapat").addEventListener("click",kapat);
+ m.addEventListener("click",function(e){if(e.target===m){kapat();}});
+ document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!m.hidden){kapat();}});
+ document.getElementById("rgonder").addEventListener("click",function(){
+  var v=t.value.trim();
+  if(!v){h.textContent="Lütfen mesajınızı yazın.";t.focus();return;}
+  var a=document.createElement("a");
+  a.href="https://wa.me/905443913120?text="+encodeURIComponent(v);
+  a.target="_blank";a.rel="noopener";
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  t.value="";kapat();
+ });
+})();
+</script>
 </body>
 </html>

@@ -1,12 +1,5 @@
-<!doctype html>
-<html lang="tr">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>OP-N Digital</title>
-<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-</head>
-<body>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
@@ -648,12 +641,20 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
       <div class="sec-head">
         <h2>Müşterilerimiz ne diyor</h2>
         <div class="rating-sum">
-          <strong>4,7</strong>
-          <span class="stars" style="--r:4.73" role="img" aria-label="5 üzerinden 4,7 puan"><i aria-hidden="true">★★★★★</i></span>
-          <span class="mono-note">5 üzerinden · 3 yoruma göre</span>
+          <strong>4,6</strong>
+          <span class="stars" style="--r:4.6" role="img" aria-label="5 üzerinden 4,6 puan"><i aria-hidden="true">★★★★★</i></span>
+          <span class="mono-note">5 üzerinden · 4 yoruma göre</span>
         </div>
       </div>
       <div class="reviews">
+        <figure class="review">
+          <div class="review-top">
+            <span class="stars" style="--r:4.2" role="img" aria-label="5 üzerinden 4,2 puan"><i aria-hidden="true">★★★★★</i></span>
+            <span class="mono-note">4,2</span>
+          </div>
+          <blockquote>“Siteniz sayesinde başarılı tasarımlarımı sergileyebiliyorum. Teşekkür ederim OP-N Digital!”</blockquote>
+          <figcaption>Yusuf H.</figcaption>
+        </figure>
         <figure class="review">
           <div class="review-top">
             <span class="stars" style="--r:4.5" role="img" aria-label="5 üzerinden 4,5 puan"><i aria-hidden="true">★★★★★</i></span>
@@ -710,20 +711,8 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
           <textarea id="f-msg" placeholder="İşiniz nedir, sitede neler olsun istiyorsunuz?"></textarea>
         </div>
         <div class="form-actions">
-          <button class="btn btn-primary" type="submit">E-posta ile gönder</button>
+          <a class="btn btn-primary" id="mail-send" href="mailto:opancial@icloud.com">E-posta ile gönder</a>
           <span class="hint" id="form-hint"></span>
-        </div>
-        <div class="out" id="out" hidden>
-          <div class="field">
-            <label for="f-out">E-postadaki mesajınız</label>
-            <textarea id="f-out" readonly></textarea>
-          </div>
-          <p class="hint">Alıcı: <strong>opancial@icloud.com</strong>. E-posta uygulamanız açıldıysa orada gönder tuşuna basın. Açılmadıysa mesajı kopyalayıp bu adrese kendiniz gönderebilirsiniz.</p>
-          <div class="form-actions">
-            <a class="btn btn-primary" id="mail-link" href="#">E-posta uygulamasını aç</a>
-            <button class="btn btn-ghost" type="button" id="copy">Mesajı kopyala</button>
-            <span class="hint" id="copy-hint" aria-live="polite"></span>
-          </div>
         </div>
       </form>
     </div>
@@ -862,34 +851,34 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
 
   /* Mesaj hazırlama */
   var form = document.getElementById("brief");
-  var out = document.getElementById("out");
-  var fout = document.getElementById("f-out");
   var hint = document.getElementById("form-hint");
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
+  var mailSend = document.getElementById("mail-send");
+  function buildMail() {
     var name = document.getElementById("f-name").value.trim();
     var type = document.getElementById("f-type").value;
     var msg = document.getElementById("f-msg").value.trim();
-    if (!msg) { hint.textContent = "Lütfen ne istediğinizi kısaca yazın."; document.getElementById("f-msg").focus(); return; }
-    hint.textContent = "";
     var subject = "OP-N Digital proje talebi: " + type + (name ? " (" + name + ")" : "");
-    var href = "mailto:opancial@icloud.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(document.getElementById("f-msg").value);
-    fout.value = document.getElementById("f-msg").value;
-    document.getElementById("mail-link").href = href;
-    out.hidden = false;
-    var go = document.createElement("a");
-    go.href = href;
-    document.body.appendChild(go);
-    go.click();
-    document.body.removeChild(go);
+    var body = "Adınız: " + name + "\n\nSite türü: " + type + "\n\nNeler istiyorsunuz: " + msg;
+    mailSend.href = "mailto:opancial@icloud.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+    return msg;
+  }
+  ["f-name", "f-type", "f-msg"].forEach(function (id) {
+    var el = document.getElementById(id);
+    el.addEventListener("input", buildMail);
+    el.addEventListener("change", buildMail);
   });
-  document.getElementById("copy").addEventListener("click", function () {
-    var ch2 = document.getElementById("copy-hint");
-    var fallback = function () { fout.focus(); fout.select(); ch2.textContent = "Metin seçildi, kopyalayabilirsiniz."; };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(fout.value).then(function () { ch2.textContent = "Kopyalandı."; }, fallback);
-    } else { fallback(); }
+  mailSend.addEventListener("click", function (e) {
+    var msg = buildMail();
+    if (!msg) {
+      e.preventDefault();
+      hint.textContent = "Lütfen ne istediğinizi kısaca yazın.";
+      document.getElementById("f-msg").focus();
+      return;
+    }
+    hint.textContent = "E-posta uygulamanız açılıyor ve mesajınız hazırlanıyor.";
   });
+  form.addEventListener("submit", function (e) { e.preventDefault(); });
+  buildMail();
 
   /* Müşteri hizmetleri: yazılan mesaj olduğu gibi WhatsApp'a taşınır */
   var WA_NUMBER = "905399443067";
@@ -926,5 +915,4 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
 })();
 </script>
 
-</body>
-</html>
+</body></html>

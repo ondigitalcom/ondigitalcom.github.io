@@ -262,16 +262,15 @@ h3 { font-family: var(--f-display); font-weight: 600; font-size: 1.05rem; line-h
   padding: clamp(0.75rem, 3vw, 2rem);
   overflow: hidden;
 }
+.scaler { flex: none; position: relative; overflow: hidden; border-radius: var(--r); }
 .frame {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
+  width: 1200px;
+  transform-origin: 0 0;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r);
   overflow: hidden;
   box-shadow: 0 14px 34px -16px rgba(0, 0, 0, 0.35);
-  transition: width 0.45s cubic-bezier(0.3, 0.7, 0.2, 1);
 }
 .chrome { display: flex; align-items: center; gap: 0.4rem; padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--line); background: var(--surface-2); }
 .chrome i { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--line); flex: none; }
@@ -312,6 +311,14 @@ h3 { font-family: var(--f-display); font-weight: 600; font-size: 1.05rem; line-h
   .m-nav { padding-inline: 1.8rem; }
   .m-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 0 1.8rem 2rem; gap: 1rem; }
   .m-swatch { height: 5rem; }
+}
+@container (min-width: 900px) {
+  .m-nav { padding-inline: 3rem; }
+  .m-hero { padding: 3.5rem 3rem 2.5rem; }
+  .m-hero h4 { font-size: 2.6rem; max-width: 20ch; }
+  .m-hero p { font-size: 1.05rem; max-width: 52ch; }
+  .m-cards { padding: 0 3rem 3rem; gap: 1.5rem; }
+  .m-swatch { height: 7rem; }
 }
 
 /* Çalışma adımları */
@@ -594,12 +601,12 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
         <div class="seg" role="group" aria-label="Ekran boyutu">
           <button type="button" class="dev-btn" data-w="390" aria-pressed="false">Telefon</button>
           <button type="button" class="dev-btn" data-w="768" aria-pressed="false">Tablet</button>
-          <button type="button" class="dev-btn" data-w="0" aria-pressed="true">Bilgisayar</button>
+          <button type="button" class="dev-btn" data-w="1200" aria-pressed="false">Bilgisayar</button>
         </div>
         <span class="mono-note" id="wlabel" aria-live="polite">Örnek taslak</span>
       </div>
       <div class="stage-area">
-        <div class="frame" id="frame">
+        <div class="scaler" id="scaler"><div class="frame" id="frame">
           <div class="chrome"><i></i><i></i><i></i><span class="url">ornek-kafe.com</span></div>
           <div class="screen">
             <div class="m-nav">
@@ -618,7 +625,7 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
               <div class="m-card"><div class="m-swatch"><span></span></div><div><span>Soğuk demleme</span><em>160 ₺</em></div></div>
             </div>
           </div>
-        </div>
+        </div></div>
       </div>
     </div>
   </section>
@@ -800,23 +807,34 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
   document.addEventListener("keydown", function () { endIntro(); });
   setTimeout(endIntro, 4000);
 
-  /* Ekran boyutu denemesi */
+  /* Ekran boyutu denemesi: örnek site gerçek genişliğinde çizilir, ekrana sığacak kadar küçültülür */
   var frame = document.getElementById("frame");
+  var scaler = document.getElementById("scaler");
+  var area = document.querySelector(".stage-area");
   var wlabel = document.getElementById("wlabel");
   var devBtns = document.querySelectorAll(".dev-btn");
-  function showWidth() {
-    var w = Math.round(frame.getBoundingClientRect().width);
-    wlabel.textContent = "Örnek taslak · genişlik " + w + " px";
+  var names = { 390: "Telefon", 768: "Tablet", 1200: "Bilgisayar" };
+  var current = window.innerWidth < 700 ? 390 : 1200;
+  function fit() {
+    var cs = getComputedStyle(area);
+    var avail = area.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    var sc = Math.min(1, avail / current);
+    frame.style.width = current + "px";
+    frame.style.transform = "scale(" + sc + ")";
+    scaler.style.width = Math.round(current * sc) + "px";
+    scaler.style.height = Math.round(frame.offsetHeight * sc) + "px";
+    wlabel.textContent = names[current] + " görünümü · " + current + " px";
+    for (var k = 0; k < devBtns.length; k++) devBtns[k].setAttribute("aria-pressed", String(parseInt(devBtns[k].getAttribute("data-w"), 10) === current));
   }
   for (var j = 0; j < devBtns.length; j++) {
     devBtns[j].addEventListener("click", function () {
-      var w = parseInt(this.getAttribute("data-w"), 10);
-      frame.style.width = w ? w + "px" : "100%";
-      for (var k = 0; k < devBtns.length; k++) devBtns[k].setAttribute("aria-pressed", String(devBtns[k] === this));
+      current = parseInt(this.getAttribute("data-w"), 10);
+      fit();
     });
   }
-  if (window.ResizeObserver) { new ResizeObserver(showWidth).observe(frame); } else { window.addEventListener("resize", showWidth); }
-  showWidth();
+  if (window.ResizeObserver) { new ResizeObserver(fit).observe(area); new ResizeObserver(fit).observe(frame); }
+  window.addEventListener("resize", fit);
+  fit();
 
   /* İletişim kanalları */
   var ch = document.getElementById("channels");

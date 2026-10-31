@@ -699,7 +699,6 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
           <h2>Projenizi anlatın</h2>
           <p>Nasıl bir site istediğinizi birkaç cümleyle yazın. Gönder'e basınca e-posta uygulamanız yazdığınız mesajla açılır, orada gönder tuşuna basmanız yeterli.</p>
         </div>
-        <div class="channels" id="channels"></div>
       </div>
       <form id="brief" novalidate>
         <div class="field">
@@ -835,39 +834,6 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
   if (window.ResizeObserver) { new ResizeObserver(fit).observe(area); new ResizeObserver(fit).observe(frame); }
   window.addEventListener("resize", fit);
   fit();
-
-  /* İletişim kanalları */
-  var ch = document.getElementById("channels");
-  function chanRow(label, inner) {
-    var d = document.createElement("div"); d.className = "chan";
-    var l = document.createElement("span"); l.className = "mono-note"; l.textContent = label;
-    d.appendChild(l); d.appendChild(inner); return d;
-  }
-  var any = false;
-  if (CONTACT.email) {
-    any = true;
-    var wrapE = document.createElement("span"); wrapE.style.display = "contents";
-    var strong = document.createElement("strong"); strong.textContent = CONTACT.email;
-    var cb = document.createElement("button"); cb.type = "button"; cb.textContent = "Kopyala";
-    cb.addEventListener("click", function () {
-      var done = function () { cb.textContent = "Kopyalandı"; };
-      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(CONTACT.email).then(done, function () { cb.textContent = "Elle kopyalayın"; });
-      else cb.textContent = "Elle kopyalayın";
-    });
-    wrapE.appendChild(strong); wrapE.appendChild(cb);
-    ch.appendChild(chanRow("E-posta", wrapE));
-  }
-  if (CONTACT.whatsapp) {
-    any = true;
-    var a = document.createElement("a"); a.href = "https://wa.me/" + CONTACT.whatsapp.replace(/\D/g, ""); a.target = "_blank"; a.rel = "noopener"; a.textContent = "WhatsApp'tan yaz";
-    ch.appendChild(chanRow("WhatsApp", a));
-  }
-  if (CONTACT.instagram) {
-    any = true;
-    var ig = document.createElement("a"); ig.href = "https://instagram.com/" + CONTACT.instagram.replace(/^@/, ""); ig.target = "_blank"; ig.rel = "noopener"; ig.textContent = "@" + CONTACT.instagram.replace(/^@/, "");
-    ch.appendChild(chanRow("Instagram", ig));
-  }
-  if (!any) { var p = document.createElement("p"); p.className = "soon"; p.textContent = "İletişim kanalları çok yakında burada olacak."; ch.appendChild(p); }
 
   /* Mesaj hazırlama */
   var form = document.getElementById("brief");

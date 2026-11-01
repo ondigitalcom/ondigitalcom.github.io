@@ -1,5 +1,12 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>OP-N Digital</title>
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
@@ -465,6 +472,32 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
 .cs-note { font-size: 0.74rem; line-height: 1.4; color: var(--muted); padding: 0 1rem 0.9rem; background: var(--surface); }
 @media (prefers-reduced-motion: reduce) { .cs-panel { animation: none; } .cs-bubble { transition: none; } }
 
+/* Hava efekti */
+#wx-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 4; }
+.wx-chip {
+  position: fixed;
+  left: max(16px, env(safe-area-inset-left, 0px));
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: calc(100vw - 7.5rem);
+  padding: 0.55rem 0.9rem 0.55rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--fg);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 8px 20px -10px rgba(0, 0, 0, 0.4);
+}
+.wx-chip:hover { border-color: var(--accent); }
+.wx-chip[aria-pressed="true"] { border-color: var(--accent); }
+.wx-chip svg { width: 1.1rem; height: 1.1rem; flex: none; color: var(--accent); }
+
 /* Açılış animasyonu */
 .intro {
   position: fixed;
@@ -750,6 +783,12 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
   </div>
 </footer>
 
+<canvas id="wx-canvas" aria-hidden="true"></canvas>
+<button type="button" class="wx-chip" id="wx-btn" aria-pressed="false" title="Konumunuz bize gönderilmez. Yalnızca hava durumu servisine, yaklaşık olarak iletilir.">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.5 18a4.5 4.5 0 0 0 0-9 6 6 0 0 0-11.7 1.6A3.8 3.8 0 0 0 6.5 18z"/></svg>
+  <span id="wx-label">Hava efekti</span>
+</button>
+
 <button type="button" class="cs-bubble" id="cs-bubble" aria-expanded="false" aria-controls="cs-panel" aria-label="Müşteri hizmetleri">
   <svg class="ic-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z"/></svg>
   <svg class="ic-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -902,4 +941,121 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
 })();
 </script>
 
-</body></html>
+<script>
+/* Hava efekti: konum izniyle yağmur ya da kar yağıyorsa hafif bir efekt gösterir */
+(function () {
+  var btn = document.getElementById("wx-btn");
+  var label = document.getElementById("wx-label");
+  var cv = document.getElementById("wx-canvas");
+  if (!btn || !label || !cv || !cv.getContext) return;
+  var ctx = cv.getContext("2d");
+  var parts = [], kind = null, raf = 0, last = 0, active = false;
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var DEFAULT = "Hava efekti";
+  var KEY = "opn-wx";
+
+  function setLabel(t) { label.textContent = t; }
+  function store(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+
+  function size() {
+    var d = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(window.innerWidth * d);
+    cv.height = Math.round(window.innerHeight * d);
+    ctx.setTransform(d, 0, 0, d, 0, 0);
+  }
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function make(spread) {
+    var w = window.innerWidth, h = window.innerHeight;
+    if (kind === "rain") return { x: rnd(0, w), y: spread ? rnd(0, h) : rnd(-40, 0), l: rnd(8, 15), v: rnd(380, 540) };
+    return { x: rnd(0, w), y: spread ? rnd(0, h) : rnd(-10, 0), r: rnd(1.2, 2.6), v: rnd(24, 55), p: rnd(0, 6.28) };
+  }
+  function fill() {
+    var n = Math.round(Math.min(90, Math.max(35, window.innerWidth * window.innerHeight / 18000)));
+    parts = [];
+    for (var i = 0; i < n; i++) parts.push(make(true));
+  }
+  function tick(t) {
+    if (!kind) return;
+    var dt = Math.min(0.05, (t - (last || t)) / 1000);
+    last = t;
+    var w = window.innerWidth, h = window.innerHeight;
+    ctx.clearRect(0, 0, w, h);
+    var col = getComputedStyle(document.documentElement).getPropertyValue("--muted").trim() || "#8a93a8";
+    ctx.strokeStyle = col; ctx.fillStyle = col;
+    if (kind === "rain") {
+      ctx.globalAlpha = 0.32; ctx.lineWidth = 1; ctx.beginPath();
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i];
+        p.y += p.v * dt; p.x += p.v * dt * 0.12;
+        if (p.y > h + 20) { parts[i] = make(false); continue; }
+        ctx.moveTo(p.x, p.y); ctx.lineTo(p.x - p.l * 0.12, p.y - p.l);
+      }
+      ctx.stroke();
+    } else {
+      ctx.globalAlpha = 0.55;
+      for (var j = 0; j < parts.length; j++) {
+        var f = parts[j];
+        f.y += f.v * dt; f.p += dt; f.x += Math.sin(f.p) * 12 * dt;
+        if (f.y > h + 10) { parts[j] = make(false); continue; }
+        ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, 6.2832); ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+    raf = requestAnimationFrame(tick);
+  }
+  function run(k) {
+    stop();
+    kind = k; size(); fill(); last = 0;
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() {
+    kind = null;
+    if (raf) cancelAnimationFrame(raf);
+    raf = 0;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+  }
+  function classify(c) {
+    var code = c.weather_code;
+    if ((code >= 71 && code <= 77) || code === 85 || code === 86 || c.snowfall > 0) return "snow";
+    if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82) || code >= 95 || c.rain > 0 || c.showers > 0) return "rain";
+    return null;
+  }
+  function off(text) {
+    active = false; stop();
+    btn.setAttribute("aria-pressed", "false");
+    setLabel(text || DEFAULT);
+  }
+  function start() {
+    if (reduce) { off("Hareket azaltma açık"); return; }
+    if (!navigator.geolocation) { off("Konum desteklenmiyor"); return; }
+    active = true;
+    btn.setAttribute("aria-pressed", "true");
+    setLabel("Konum alınıyor…");
+    navigator.geolocation.getCurrentPosition(function (pos) {
+      if (!active) return;
+      var lat = pos.coords.latitude.toFixed(1), lon = pos.coords.longitude.toFixed(1);
+      var url = "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&current=weather_code,rain,showers,snowfall&timezone=auto";
+      fetch(url).then(function (r) { if (!r.ok) throw new Error("http"); return r.json(); }).then(function (j) {
+        if (!active) return;
+        var k = classify(j.current || {});
+        if (k) { run(k); setLabel(k === "rain" ? "Yağmur efekti açık" : "Kar efekti açık"); store("1"); }
+        else { stop(); setLabel("Şu an yağış yok"); store("1"); }
+      }).catch(function () { if (active) off("Hava bilgisi alınamadı"); });
+    }, function () { off("Konum izni verilmedi"); store("0"); }, { timeout: 10000, maximumAge: 600000 });
+  }
+  btn.addEventListener("click", function () {
+    if (active) { off(); store("0"); } else { start(); }
+  });
+  window.addEventListener("resize", function () { if (kind) { size(); fill(); } });
+
+  /* Daha önce izin verilmişse sayfa açılırken kendiliğinden başlar */
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (saved === "1" && navigator.permissions && navigator.permissions.query) {
+    navigator.permissions.query({ name: "geolocation" }).then(function (p) { if (p.state === "granted") start(); }).catch(function () {});
+  }
+})();
+</script>
+
+</body>
+</html>

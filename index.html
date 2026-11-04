@@ -1,12 +1,5 @@
-<!doctype html>
-<html lang="tr">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>OP-N Digital</title>
-<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-</head>
-<body>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
@@ -387,7 +380,7 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
 .social-link { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.85rem 0.4rem 0.45rem; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--fg); font-size: 0.8125rem; font-weight: 500; text-decoration: none; }
 .social-link:hover { border-color: var(--accent); }
 .social-link svg { width: 1.75rem; height: 1.75rem; padding: 0.4rem; border-radius: 50%; background: var(--accent); color: var(--accent-fg); flex: none; }
-.copyright { margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--line); font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.04em; color: var(--muted); text-align: center; }
+.copyright { margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--line); font-family: var(--f-mono); font-size: clamp(0.55rem, 2.9vw, 0.78rem); letter-spacing: 0.04em; color: var(--muted); text-align: center; white-space: nowrap; }
 
 /* Müşteri hizmetleri baloncuğu */
 .cs-bubble {
@@ -472,9 +465,18 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
 .cs-note { font-size: 0.74rem; line-height: 1.4; color: var(--muted); padding: 0 1rem 0.9rem; background: var(--surface); }
 @media (prefers-reduced-motion: reduce) { .cs-panel { animation: none; } .cs-bubble { transition: none; } }
 
-/* Hava efekti */
+/* Hava efekti, bildirim ve mağaza */
 #wx-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 4; }
-.wx-chip {
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.tools { display: flex; align-items: center; gap: 0.5rem; }
+.wx-btn { width: 2.6rem; height: 2.6rem; flex: none; display: grid; place-items: center; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--muted); cursor: pointer; }
+.wx-btn:hover { color: var(--fg); }
+.wx-btn[aria-pressed="true"] { background: var(--accent); border-color: transparent; color: var(--accent-fg); }
+.wx-btn svg { width: 1.15rem; height: 1.15rem; }
+.nav-back { margin-right: auto; font-size: 0.9rem; font-weight: 500; color: var(--fg); text-decoration: none; padding: 0.5rem 0.9rem; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); white-space: nowrap; }
+.nav-back:hover { border-color: var(--accent); }
+@media (max-width: 480px) { .seg button { padding: 0.5rem 0.6rem; } .bar { gap: 0.5rem; } .nav-back { font-size: 0.78rem; padding: 0.45rem 0.6rem; } }
+.shop-chip {
   position: fixed;
   left: max(16px, env(safe-area-inset-left, 0px));
   bottom: calc(16px + env(safe-area-inset-bottom, 0px));
@@ -482,21 +484,99 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  max-width: calc(100vw - 7.5rem);
-  padding: 0.55rem 0.9rem 0.55rem 0.7rem;
+  padding: 0.65rem 1rem 0.65rem 0.8rem;
   border: 1px solid var(--line);
   border-radius: 999px;
   background: var(--surface);
   color: var(--fg);
   font: inherit;
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
   box-shadow: 0 8px 20px -10px rgba(0, 0, 0, 0.4);
 }
-.wx-chip:hover { border-color: var(--accent); }
-.wx-chip[aria-pressed="true"] { border-color: var(--accent); }
-.wx-chip svg { width: 1.1rem; height: 1.1rem; flex: none; color: var(--accent); }
+.shop-chip:hover { border-color: var(--accent); }
+.shop-chip svg { width: 1.15rem; height: 1.15rem; flex: none; color: var(--accent); }
+.in-shop .shop-chip { display: none; }
+.cart-chip { display: none; position: fixed; left: max(16px, env(safe-area-inset-left, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 40; align-items: center; gap: 0.5rem; padding: 0.65rem 1rem 0.65rem 0.8rem; border: 1px solid var(--accent); border-radius: 999px; background: var(--accent); color: var(--accent-fg); font: inherit; font-size: 0.85rem; font-weight: 600; cursor: pointer; box-shadow: 0 8px 20px -10px rgba(0, 0, 0, 0.5); }
+.cart-chip svg { width: 1.15rem; height: 1.15rem; flex: none; }
+.in-shop .cart-chip { display: inline-flex; }
+.cart { scroll-margin-top: 5rem; }
+
+.toast {
+  position: fixed;
+  top: calc(4.6rem + env(safe-area-inset-top, 0px));
+  left: 50%;
+  z-index: 60;
+  max-width: calc(100vw - 32px);
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--fg);
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-align: center;
+  box-shadow: 0 10px 24px -12px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: translate(-50%, -6px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+.shop-hero { padding-block: clamp(2.5rem, 6vw, 4.5rem) clamp(1.5rem, 3vw, 2.5rem); }
+.shop-hero h1 { font-size: clamp(1.9rem, 5vw, 3.2rem); }
+.shop-hero p { margin-top: 0.9rem; color: var(--muted); max-width: 54ch; }
+.shop-grid { display: grid; gap: 2rem; grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (min-width: 960px) {
+  .shop-grid { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 3rem; }
+  .cart { position: sticky; top: 5.5rem; }
+}
+.products { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+.product { display: grid; gap: 0.9rem; align-content: space-between; padding: 1.25rem; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; min-width: 0; }
+.product-top { display: grid; gap: 0.5rem; }
+.product p { color: var(--muted); font-size: 0.95rem; }
+.product p b { font-weight: 700; }
+.price { font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.06em; color: var(--muted); }
+.price strong { font-family: var(--f-display); font-size: 1.15rem; letter-spacing: 0; color: var(--fg); }
+.shelf-tabs { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); margin-bottom: 1.5rem; }
+.shelf-tab { display: grid; gap: 0.3rem; justify-items: start; padding: 0.9rem 1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--fg); font: inherit; text-align: left; cursor: pointer; min-width: 0; }
+.shelf-tab:hover { border-color: var(--accent); }
+.shelf-tab[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.shelf-tab svg { width: 1.5rem; height: 1.5rem; color: var(--accent); }
+.shelf-tab b { font-family: var(--f-display); font-size: 0.95rem; font-weight: 600; }
+.shelf-tab span { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.06em; color: var(--muted); }
+.shelf-wrap { position: relative; padding-bottom: 1rem; }
+.shelf-wrap::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 0.75rem; border: 1px solid var(--line); border-radius: 4px; background: var(--surface-2); }
+.shelf { display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x proximity; padding-bottom: 0.5rem; }
+.shelf > * { flex: 0 0 min(78%, 15.5rem); scroll-snap-align: start; }
+.shelf > .shelf-empty { flex: 1 1 auto; }
+.cover { display: grid; place-items: center; height: 6.5rem; border-radius: 8px; background: var(--accent-soft); color: var(--accent); }
+.cover svg { width: 2.4rem; height: 2.4rem; }
+.shelf-empty { display: grid; gap: 0.4rem; align-content: center; padding: 1.5rem; border: 1px dashed var(--line); border-radius: 14px; color: var(--muted); }
+.shelf-empty strong { color: var(--fg); font-family: var(--f-display); font-weight: 600; }
+.cart { display: grid; gap: 1rem; padding: 1.25rem; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; min-width: 0; }
+.cart-list { list-style: none; margin: 0; padding: 0; }
+.cart-item { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding-block: 0.65rem; border-top: 1px solid var(--line); }
+.cart-item .n { min-width: 0; overflow-wrap: anywhere; font-weight: 500; }
+.qty { display: inline-flex; align-items: center; gap: 0.4rem; flex: none; }
+.qty button { width: 2rem; height: 2rem; border: 1px solid var(--line); border-radius: 50%; background: var(--bg); color: var(--fg); font: inherit; cursor: pointer; }
+.qty button:hover { border-color: var(--accent); }
+.qty b { min-width: 1.2rem; text-align: center; font-variant-numeric: tabular-nums; }
+.cart-empty { color: var(--muted); font-size: 0.95rem; }
+.cart-total { display: flex; justify-content: space-between; gap: 1rem; font-weight: 600; }
+.order-actions { display: grid; gap: 0.6rem; }
+.order-note { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+.shop-welcome { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 1rem; background: var(--bg); text-align: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+.shop-welcome.on { opacity: 1; pointer-events: auto; }
+.shop-welcome .in { opacity: 0; transform: translateY(0.6rem); transition: opacity 0.5s ease 0.25s, transform 0.5s ease 0.25s; }
+.shop-welcome.on .in { opacity: 1; transform: none; }
+.shop-welcome .wm { font-size: clamp(3rem, 14vw, 6.5rem); }
+.shop-welcome .sw-top { display: block; margin-bottom: 0.6rem; font-family: var(--f-body); font-size: clamp(0.8rem, 2.4vw, 1rem); letter-spacing: 0.1em; color: var(--muted); }
+.shop-welcome p { margin: 1.25rem auto 0; max-width: 26ch; font-family: var(--f-body); font-weight: 400; font-size: clamp(0.9rem, 3vw, 1.15rem); letter-spacing: 0.1em; line-height: 1.4; color: var(--muted); text-wrap: balance; }
+@media (prefers-reduced-motion: reduce) { .toast, .shop-welcome, .shop-welcome .in { transition: none; } }
 
 /* Açılış animasyonu */
 .intro {
@@ -566,7 +646,13 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
       <a href="#surec">Süreç</a>
       <a href="#iletisim">İletişim</a>
     </nav>
-    <div class="seg" role="group" aria-label="Tema">
+    <a class="nav-back" id="shop-back" href="#" hidden>← Ana Sayfa</a>
+    <div class="tools">
+      <button type="button" class="wx-btn" id="wx-btn" aria-pressed="false" title="Hava efekti. Konumunuz bize gönderilmez, yalnızca hava durumu servisine yaklaşık olarak iletilir.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.5 18a4.5 4.5 0 0 0 0-9 6 6 0 0 0-11.7 1.6A3.8 3.8 0 0 0 6.5 18z"/></svg>
+        <span class="sr-only" id="wx-label">Hava efekti</span>
+      </button>
+      <div class="seg" role="group" aria-label="Tema">
       <button type="button" class="theme-btn" data-mode="auto" aria-pressed="true" aria-label="Otomatik tema">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Otomatik</span>
       </button>
@@ -577,10 +663,11 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></svg><span>Karanlık</span>
       </button>
     </div>
+    </div>
   </div>
 </header>
 
-<main>
+<main id="site">
   <section class="hero">
     <div class="wrap">
       <p class="eyebrow">Web tasarım ve kurulum</p>
@@ -761,13 +848,53 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
   </section>
 </main>
 
+<main id="shop" hidden>
+  <section class="shop-hero">
+    <div class="wrap">
+      <p class="eyebrow">Mağaza</p>
+      <h1>OP-N Digital Mağazası</h1>
+      <p>İstediğiniz ürünü sepete ekleyin, siparişinizi WhatsApp ile bize iletin. Teslim süresinin detaylarını sizinle paylaşalım.</p>
+    </div>
+  </section>
+  <section class="sec">
+    <div class="wrap shop-grid">
+      <div>
+        <div class="sec-head"><h2>Ürünlerimiz</h2><p>Bir kategori seçin, ürünleri inceleyin ve sepetinize ekleyin.</p></div>
+        <div class="shelf-tabs" id="shelf-tabs" role="group" aria-label="Raflar"></div>
+        <div class="shelf-wrap"><div class="shelf" id="products"></div></div>
+      </div>
+      <aside class="cart" id="cart" aria-label="Sepet">
+        <h3 id="cart-title">Sepetim</h3>
+        <ul class="cart-list" id="cart-list"></ul>
+        <p class="cart-empty" id="cart-empty">Sepetiniz boş. Soldan bir ürün ekleyin.</p>
+        <div class="cart-total" id="cart-total" hidden><span>Toplam</span><span id="cart-sum"></span></div>
+        <div class="order-actions">
+          <a class="btn btn-primary" id="o-wa" href="#">Alışverişi tamamla</a>
+        </div>
+        <p class="order-note" id="o-domain" hidden>Domain ücretleri fiyata dahil değildir ve domain hizmetimiz bulunmamaktadır.</p>
+        <p class="hint" id="o-hint" aria-live="polite"></p>
+      </aside>
+    </div>
+  </section>
+  <div id="shop-reviews"></div>
+</main>
+
+<div class="shop-welcome" id="shop-welcome" role="status" hidden>
+  <div class="in">
+    <span class="sw-top">Rızkın yarısı ticarettedir.</span>
+    <span class="wm" aria-hidden="true"><span>O</span><span>P</span><span class="dash"></span><span>N</span></span>
+    <p>Digital Mağazamıza hoşgeldiniz!</p>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <footer>
   <div class="wrap foot">
     <div class="foot-left">
       <span class="wm"><span>O</span><span>P</span><span class="dash"></span><span>N</span></span>
       <p>OP-N Digital · Web sitesi kurulumu, isteğe özel tasarım, mobil ve PC uyumlu siteler.</p>
       <div class="social" aria-label="Bize ulaşın">
-        <a class="social-link" href="https://wa.me/905399443067" target="_blank" rel="noopener">
+        <a class="social-link" href="https://wa.me/905399443067">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z"/></svg>
           <span>WhatsApp</span>
         </a>
@@ -779,14 +906,18 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
     </div>
   </div>
   <div class="wrap">
-    <p class="copyright">Sitenin bütün hakları OP-N Digital'e aittir.</p>
+    <p class="copyright">© Sitenin bütün hakları OP-N Digital'e aittir.</p>
   </div>
 </footer>
 
 <canvas id="wx-canvas" aria-hidden="true"></canvas>
-<button type="button" class="wx-chip" id="wx-btn" aria-pressed="false" title="Konumunuz bize gönderilmez. Yalnızca hava durumu servisine, yaklaşık olarak iletilir.">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.5 18a4.5 4.5 0 0 0 0-9 6 6 0 0 0-11.7 1.6A3.8 3.8 0 0 0 6.5 18z"/></svg>
-  <span id="wx-label">Hava efekti</span>
+<button type="button" class="cart-chip" id="cart-chip" aria-label="Sepetim">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M3 4h2.5l2.2 11h10.6l2-8H6.2"/></svg>
+  <span id="cart-chip-text">Sepetim</span>
+</button>
+<button type="button" class="shop-chip" id="shop-chip" aria-label="Alışveriş">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M3 4h2.5l2.2 11h10.6l2-8H6.2"/></svg>
+  <span>Alışveriş</span>
 </button>
 
 <button type="button" class="cs-bubble" id="cs-bubble" aria-expanded="false" aria-controls="cs-panel" aria-label="Müşteri hizmetleri">
@@ -804,7 +935,7 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
   </div>
   <div class="ph-input">
     <textarea id="cs-msg" rows="1" placeholder="Mesajınızı yazın" aria-label="Mesajınız"></textarea>
-    <a class="cs-send" id="cs-send" href="#" target="_blank" rel="noopener" aria-disabled="true" aria-label="WhatsApp'ta gönder" title="WhatsApp'ta gönder">
+    <a class="cs-send" id="cs-send" href="#" aria-disabled="true" aria-label="WhatsApp'ta gönder" title="WhatsApp'ta gönder">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
     </a>
   </div>
@@ -954,7 +1085,7 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
   var DEFAULT = "Hava efekti";
   var KEY = "opn-wx";
 
-  function setLabel(t) { label.textContent = t; }
+  function setLabel(t) { label.textContent = t; if (t !== DEFAULT && window.opnToast) window.opnToast(t); }
   function store(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
 
   function size() {
@@ -1041,21 +1172,260 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
         if (k) { run(k); setLabel(k === "rain" ? "Yağmur efekti açık" : "Kar efekti açık"); store("1"); }
         else { stop(); setLabel("Şu an yağış yok"); store("1"); }
       }).catch(function () { if (active) off("Hava bilgisi alınamadı"); });
-    }, function () { off("Konum izni verilmedi"); store("0"); }, { timeout: 10000, maximumAge: 600000 });
+    }, function (err) {
+      var denied = !!(err && err.code === 1);
+      off(denied ? "Konum izni verilmedi" : "Konum alınamadı");
+      if (denied) store("0");
+    }, { timeout: 10000, maximumAge: 600000 });
   }
   btn.addEventListener("click", function () {
     if (active) { off(); store("0"); } else { start(); }
   });
   window.addEventListener("resize", function () { if (kind) { size(); fill(); } });
 
-  /* Daha önce izin verilmişse sayfa açılırken kendiliğinden başlar */
+  /* Açılış animasyonu bittikten sonra kendiliğinden başlar. Daha önce izin reddedildiyse ya da efekt elle kapatıldıysa tekrar sormaz */
   var saved = null;
   try { saved = localStorage.getItem(KEY); } catch (e) {}
-  if (saved === "1" && navigator.permissions && navigator.permissions.query) {
-    navigator.permissions.query({ name: "geolocation" }).then(function (p) { if (p.state === "granted") start(); }).catch(function () {});
+  if (saved !== "0") {
+    setTimeout(function () {
+      if (active) return;
+      if (navigator.permissions && navigator.permissions.query) {
+        navigator.permissions.query({ name: "geolocation" }).then(function (p) { if (p.state !== "denied") start(); }).catch(function () { start(); });
+      } else { start(); }
+    }, 4300);
   }
 })();
 </script>
 
-</body>
-</html>
+<script>
+/* Mağaza: ana sitenin içinde ikinci bir site gibi çalışır */
+(function () {
+  var site = document.getElementById("site");
+  var shop = document.getElementById("shop");
+  var welcome = document.getElementById("shop-welcome");
+  var chip = document.getElementById("shop-chip");
+  var back = document.getElementById("shop-back");
+  var nav = document.querySelector(".nav");
+  var toastEl = document.getElementById("toast");
+  if (!site || !shop || !chip) return;
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var toastT = 0, inShop = false, opening = false;
+
+  window.opnToast = function (t) {
+    if (!toastEl) return;
+    toastEl.textContent = t;
+    toastEl.classList.add("on");
+    clearTimeout(toastT);
+    toastT = setTimeout(function () { toastEl.classList.remove("on"); }, 2600);
+  };
+
+  /* ---- Sayfa geçişi ---- */
+  function setShop(on) {
+    inShop = on;
+    site.hidden = on;
+    shop.hidden = !on;
+    back.hidden = !on;
+    if (nav) nav.hidden = on;
+    document.body.classList.toggle("in-shop", on);
+    window.scrollTo(0, 0);
+  }
+  function openShop(animated) {
+    if (inShop || opening) return;
+    if (!animated) { setShop(true); return; }
+    opening = true;
+    welcome.hidden = false;
+    void welcome.offsetWidth;
+    welcome.classList.add("on");
+    setTimeout(function () { setShop(true); }, reduce ? 200 : 700);
+    setTimeout(function () { welcome.classList.remove("on"); }, reduce ? 1300 : 2100);
+    setTimeout(function () { welcome.hidden = true; opening = false; }, reduce ? 1400 : 2600);
+  }
+  function closeShop() { if (inShop) setShop(false); }
+  back.addEventListener("click", function (e) {
+    e.preventDefault();
+    closeShop();
+    try { history.replaceState(null, "", location.pathname + location.search); }
+    catch (err) { try { if (location.hash) location.hash = ""; } catch (e2) {} }
+  });
+  chip.addEventListener("click", function () {
+    try { if (location.hash !== "#magaza") location.hash = "magaza"; } catch (e) {}
+    openShop(true);
+  });
+  window.addEventListener("hashchange", function () {
+    if (location.hash === "#magaza") openShop(true); else closeShop();
+  });
+  if (location.hash === "#magaza") setShop(true);
+
+  /* ---- Ürünler ---- */
+  var PRODUCTS = [
+    { id: "tanitim", shelf: "web", tag: "Web sitesi", name: "Tanıtım sitesi", desc: "İşletmenizi ya da markanızı anlatan, telefonda ve bilgisayarda düzgün açılan site.", price: 4500 },
+    { id: "kurumsal", shelf: "web", tag: "Web sitesi", name: "Kurumsal site", desc: "Hizmetlerinizi, ekibinizi ve iletişim bilgilerinizi birden fazla sayfada anlatan site.", price: 8500 },
+    { id: "portfolyo", shelf: "web", tag: "Web sitesi", name: "Portfolyo sitesi", desc: "Çalışmalarınızı ve projelerinizi sergileyen, size özel hazırlanan site.", price: 2500 },
+    { id: "ig-5000", shelf: "instagram", tag: "Instagram", name: "5.000 takipçi", desc: "Instagram hesabınız için 5.000 **kaliteli** bot takipçi!", price: 500 },
+    { id: "ig-10000", shelf: "instagram", tag: "Instagram", name: "10.000 takipçi", desc: "Instagram hesabınız için 10.000 **kaliteli** bot takipçi!", price: 1000 },
+    { id: "ig-15000", shelf: "instagram", tag: "Instagram", name: "15.000 takipçi", desc: "Instagram hesabınız için 15.000 **kaliteli** bot takipçi!", price: 6450 },
+    { id: "ig-20000", shelf: "instagram", tag: "Instagram", name: "20.000 takipçi", desc: "Instagram hesabınız için 20.000 **kaliteli** bot takipçi!", price: 2000, unavailable: true },
+    { id: "ig-25000", shelf: "instagram", tag: "Instagram", name: "25.000 takipçi", desc: "Instagram hesabınız için 25.000 **kaliteli** bot takipçi!", price: 10800 }
+  ];
+  function byId(id) { for (var i = 0; i < PRODUCTS.length; i++) if (PRODUCTS[i].id === id) return PRODUCTS[i]; return null; }
+  function fmt(n) { try { return new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 0 }).format(n) + "₺"; } catch (e) { return n + "₺"; } }
+
+  var cart = {};
+  try {
+    var raw = localStorage.getItem("opn-cart");
+    var o = raw ? JSON.parse(raw) : null;
+    if (o && typeof o === "object") {
+      for (var k in o) { var q = parseInt(o[k], 10); if (byId(k) && q > 0) cart[k] = Math.min(q, 99); }
+    }
+  } catch (e) {}
+  function save() { try { localStorage.setItem("opn-cart", JSON.stringify(cart)); } catch (e) {} }
+
+  var elProducts = document.getElementById("products");
+  var elList = document.getElementById("cart-list");
+  var elEmpty = document.getElementById("cart-empty");
+  var elTotal = document.getElementById("cart-total");
+  var elSum = document.getElementById("cart-sum");
+  var elTitle = document.getElementById("cart-title");
+  var oWa = document.getElementById("o-wa");
+  var oHint = document.getElementById("o-hint");
+  var oDomain = document.getElementById("o-domain");
+
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
+
+  /* ---- Raflar (kütüphane) ---- */
+  var ICON_BOOK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4H11v15H4.5A1.5 1.5 0 0 0 3 20.5v-15z"/><path d="M21 5.5A1.5 1.5 0 0 0 19.5 4H13v15h6.5a1.5 1.5 0 0 1 1.5 1.5v-15z"/></svg>';
+  var ICON_WEB = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><circle cx="6.5" cy="6.5" r="0.6"/><circle cx="9" cy="6.5" r="0.6"/></svg>';
+  var ICON_IG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="0.6"/></svg>';
+  var SHELVES = [
+    { id: "ebook", name: "E-kitap", icon: ICON_BOOK, soon: "E-kitaplar çok yakında burada olacak." },
+    { id: "web", name: "Web sitesi", icon: ICON_WEB, soon: "Bu rafa ürünler yakında eklenecek." },
+    { id: "instagram", name: "Instagram", icon: ICON_IG, soon: "Bu rafa ürünler yakında eklenecek." }
+  ];
+  var shelfNow = "web";
+  var elTabs = document.getElementById("shelf-tabs");
+  function shelfItems(id) { return PRODUCTS.filter(function (p) { return p.shelf === id; }); }
+
+  function renderShelf() {
+    elTabs.textContent = "";
+    SHELVES.forEach(function (sh) {
+      var n = shelfItems(sh.id).length;
+      var b = el("button", "shelf-tab");
+      b.type = "button";
+      b.setAttribute("aria-pressed", String(sh.id === shelfNow));
+      b.insertAdjacentHTML("afterbegin", sh.icon);
+      b.appendChild(el("b", "", sh.name));
+      b.appendChild(el("span", "", n ? n + " ürün" : "Yakında"));
+      b.addEventListener("click", function () { shelfNow = sh.id; renderShelf(); });
+      elTabs.appendChild(b);
+    });
+    elProducts.textContent = "";
+    var cur = SHELVES.filter(function (x) { return x.id === shelfNow; })[0];
+    var items = shelfItems(shelfNow);
+    if (!items.length) {
+      var empty = el("div", "shelf-empty");
+      empty.appendChild(el("strong", "", cur.name));
+      empty.appendChild(el("span", "", cur.soon));
+      elProducts.appendChild(empty);
+      return;
+    }
+    items.forEach(function (p) {
+      var card = el("article", "product");
+      var top = el("div", "product-top");
+      var cover = el("div", "cover");
+      cover.setAttribute("aria-hidden", "true");
+      cover.insertAdjacentHTML("afterbegin", cur.icon);
+      top.appendChild(cover);
+      top.appendChild(el("span", "tag", p.tag));
+      top.appendChild(el("h3", "", p.name));
+      var dp = el("p");
+      p.desc.split("**").forEach(function (part, i) { dp.appendChild(i % 2 ? el("b", "", part) : document.createTextNode(part)); });
+      top.appendChild(dp);
+      card.appendChild(top);
+      var bottom = el("div", "product-top");
+      if (!p.hidePrice) {
+        var price = el("p", "price");
+        if (p.price == null) price.textContent = "Fiyat teklifle belirlenir";
+        else { price.appendChild(el("strong", "", fmt(p.price))); }
+        bottom.appendChild(price);
+      }
+      var add = el("button", "btn btn-primary", "Sepete ekle");
+      add.type = "button";
+      add.addEventListener("click", function () {
+        if (p.unavailable) { window.opnToast("Kısa süreli bir sorun var, bu kategori güncelleniyor."); return; }
+        cart[p.id] = Math.min((cart[p.id] || 0) + 1, 99);
+        save(); render();
+        window.opnToast(p.name + " sepete eklendi");
+      });
+      bottom.appendChild(add);
+      card.appendChild(bottom);
+      elProducts.appendChild(card);
+    });
+  }
+  renderShelf();
+
+  function lines() {
+    var out = [];
+    PRODUCTS.forEach(function (p) { if (cart[p.id]) out.push({ p: p, q: cart[p.id] }); });
+    return out;
+  }
+  function orderText() {
+    var ls = lines();
+    var items = ls.map(function (l, i) { return (i + 1) + "- " + l.p.name + (l.q > 1 ? " x" + l.q : "") + (l.p.price != null ? " (" + fmt(l.p.price * l.q) + ")" : ""); });
+    var text = "Merhaba, alışverişi tamamlamak istiyorum.\n\nSepetim:\n" + items.join("\n");
+    var total = 0, allPriced = ls.length > 0;
+    ls.forEach(function (l) { if (l.p.price == null) allPriced = false; else total += l.p.price * l.q; });
+    if (allPriced) text += "\n\nToplam: " + fmt(total);
+    return text;
+  }
+  function updateLinks() {
+    oWa.href = "https://wa.me/905399443067?text=" + encodeURIComponent(orderText());
+  }
+  function render() {
+    var ls = lines(), count = 0, total = 0, allPriced = ls.length > 0;
+    oHint.textContent = "";
+    elList.textContent = "";
+    ls.forEach(function (l) {
+      count += l.q;
+      if (l.p.price == null) allPriced = false; else total += l.p.price * l.q;
+      var li = el("li", "cart-item");
+      li.appendChild(el("span", "n", l.p.name));
+      var qty = el("span", "qty");
+      var minus = el("button", "", "−"); minus.type = "button"; minus.setAttribute("aria-label", l.p.name + " azalt");
+      var num = el("b", "", String(l.q));
+      var plus = el("button", "", "+"); plus.type = "button"; plus.setAttribute("aria-label", l.p.name + " artır");
+      minus.addEventListener("click", function () { cart[l.p.id] = (cart[l.p.id] || 1) - 1; if (cart[l.p.id] <= 0) delete cart[l.p.id]; save(); render(); });
+      plus.addEventListener("click", function () { cart[l.p.id] = Math.min((cart[l.p.id] || 0) + 1, 99); save(); render(); });
+      qty.appendChild(minus); qty.appendChild(num); qty.appendChild(plus);
+      li.appendChild(qty);
+      elList.appendChild(li);
+    });
+    oDomain.hidden = !ls.some(function (l) { return l.p.shelf === "web"; });
+    elEmpty.hidden = ls.length > 0;
+    elTotal.hidden = !(ls.length > 0 && allPriced);
+    elSum.textContent = fmt(total);
+    elTitle.textContent = count ? "Sepetim (" + count + ")" : "Sepetim";
+    chipText.textContent = count ? "Sepetim (" + count + ")" : "Sepetim";
+    updateLinks();
+  }
+
+  oWa.addEventListener("click", function (e) {
+    if (!lines().length) { e.preventDefault(); oHint.textContent = "Önce sepete bir ürün ekleyin."; return; }
+    updateLinks();
+    oHint.textContent = "";
+  });
+  var chipCart = document.getElementById("cart-chip");
+  var chipText = document.getElementById("cart-chip-text");
+  chipCart.addEventListener("click", function () {
+    var c = document.getElementById("cart");
+    if (c) c.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  });
+  render();
+
+  /* ---- Müşteri yorumları mağazada da görünür ---- */
+  var rv = document.getElementById("yorumlar");
+  var target = document.getElementById("shop-reviews");
+  if (rv && target) { var c = rv.cloneNode(true); c.removeAttribute("id"); target.appendChild(c); }
+})();
+</script>
+
+</body></html>

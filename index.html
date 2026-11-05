@@ -380,7 +380,6 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
 .social-link { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.85rem 0.4rem 0.45rem; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--fg); font-size: 0.8125rem; font-weight: 500; text-decoration: none; }
 .social-link:hover { border-color: var(--accent); }
 .social-link svg { width: 1.75rem; height: 1.75rem; padding: 0.4rem; border-radius: 50%; background: var(--accent); color: var(--accent-fg); flex: none; }
-@media (max-width: 480px) { .social { gap: 0.3rem; } .social-link { gap: 0.35rem; padding: 0.3rem 0.6rem 0.3rem 0.3rem; font-size: 0.75rem; } .social-link svg { width: 1.5rem; height: 1.5rem; padding: 0.33rem; } }
 .copyright { margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--line); font-family: var(--f-mono); font-size: clamp(0.55rem, 2.9vw, 0.78rem); letter-spacing: 0.04em; color: var(--muted); text-align: center; white-space: nowrap; }
 
 /* Müşteri hizmetleri baloncuğu */
@@ -575,8 +574,8 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
 .shop-welcome .in { opacity: 0; transform: translateY(0.6rem); transition: opacity 0.5s ease 0.25s, transform 0.5s ease 0.25s; }
 .shop-welcome.on .in { opacity: 1; transform: none; }
 .shop-welcome .wm { font-size: clamp(3rem, 14vw, 6.5rem); }
-.shop-welcome .sw-top { display: block; margin-bottom: 0.6rem; font-family: var(--f-body); font-size: clamp(0.8rem, 2.4vw, 1rem); letter-spacing: 0.1em; color: var(--muted); }
-.shop-welcome p { margin: 1.25rem auto 0; max-width: 26ch; font-family: var(--f-body); font-weight: 400; font-size: clamp(0.9rem, 3vw, 1.15rem); letter-spacing: 0.1em; line-height: 1.4; color: var(--muted); text-wrap: balance; }
+.shop-welcome .sw-top { display: block; margin-bottom: 1rem; font-family: var(--f-body); font-size: min(0.85rem, calc((100vw - 2rem) / 35)); letter-spacing: 0.1em; color: var(--muted); white-space: nowrap; }
+.shop-welcome p { margin: 1rem auto 0; white-space: nowrap; font-family: var(--f-body); font-weight: 400; font-size: min(clamp(0.75rem, 2.6vw, 0.95rem), calc((100vw - 2rem) / 24)); letter-spacing: 0.1em; line-height: 1.4; color: var(--muted); text-wrap: balance; }
 @media (prefers-reduced-motion: reduce) { .toast, .shop-welcome, .shop-welcome .in { transition: none; } }
 
 /* Açılış animasyonu */
@@ -882,7 +881,7 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
 
 <div class="shop-welcome" id="shop-welcome" role="status" hidden>
   <div class="in">
-    <span class="sw-top">Rızkın yarısı ticarettedir.</span>
+    <span class="sw-top">Kazançlarımızın üçte biri sokak hayvanlarına gidiyor.</span>
     <span class="wm" aria-hidden="true"><span>O</span><span>P</span><span class="dash"></span><span>N</span></span>
     <p>Digital Mağazamıza hoşgeldiniz!</p>
   </div>

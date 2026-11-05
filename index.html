@@ -584,6 +584,17 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
 .pay-actions { display: grid; gap: 0.6rem; }
 .pay-actions .btn { text-align: center; }
 .order-note { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+/* ---- +18 yaş doğrulama ---- */
+.age-ov { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; padding: 16px; background: rgba(8, 12, 24, 0.72); }
+.age-ov[hidden] { display: none; }
+.age-ov.blocked { background: var(--bg); }
+.age-box { width: min(420px, 100%); display: grid; gap: 0.9rem; justify-items: start; padding: 1.4rem; background: var(--surface); color: var(--fg); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.6); outline: none; }
+.age-box[hidden] { display: none; }
+.age-badge { display: inline-grid; place-items: center; min-width: 3rem; height: 3rem; padding: 0 0.6rem; border: 2px solid var(--accent); border-radius: 999px; font-family: var(--f-display); font-weight: 700; font-size: 1.05rem; color: var(--accent); }
+.age-box h3 { margin: 0; font-size: 1.2rem; }
+.age-box p { margin: 0; font-size: 0.92rem; color: var(--muted); line-height: 1.55; }
+.age-actions { display: grid; gap: 0.6rem; width: 100%; }
+.age-actions .btn { text-align: center; }
 
 .shop-welcome { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 1rem; background: var(--bg); text-align: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
 .shop-welcome.on { opacity: 1; pointer-events: auto; }
@@ -918,6 +929,22 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
     </div>
   </div>
 </div>
+<div class="age-ov" id="age-ov" hidden>
+  <div class="age-box" id="age-ask" role="alertdialog" aria-modal="true" aria-labelledby="age-title" aria-describedby="age-desc">
+    <span class="age-badge" aria-hidden="true">+18</span>
+    <h3 id="age-title">Yaş doğrulaması</h3>
+    <p id="age-desc">Alışverişi tamamlamak için 18 yaşını doldurmuş olmanız gerekir. 18 yaşını doldurdunuz mu?</p>
+    <div class="age-actions">
+      <button class="btn btn-primary" id="age-yes" type="button">Evet, 18 yaşını doldurdum</button>
+      <button class="btn btn-ghost" id="age-no" type="button">Hayır</button>
+    </div>
+  </div>
+  <div class="age-box" id="age-block" role="alertdialog" aria-modal="true" aria-labelledby="age-block-title" tabindex="-1" hidden>
+    <span class="age-badge" aria-hidden="true">+18</span>
+    <h3 id="age-block-title">Bu siteyi kullanamazsınız</h3>
+    <p>Bu site yalnızca 18 yaş ve üzeri kullanıcılar içindir. Erişiminiz kapatıldı.</p>
+  </div>
+</div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <footer>
@@ -1234,6 +1261,108 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
 </script>
 
 <script>
+/* +18 yaş doğrulaması: "Hayır" diyen kullanıcının tüm siteyle etkileşimi kapanır; seçim kayıtlıdır */
+(function () {
+  var KEY = "opn-age";
+  var ov = document.getElementById("age-ov");
+  var ask = document.getElementById("age-ask");
+  var block = document.getElementById("age-block");
+  var yes = document.getElementById("age-yes");
+  var no = document.getElementById("age-no");
+  if (!ov || !ask || !block || !yes || !no) return;
+  var pending = null, locked = [];
+
+  /* Seçim yalnızca çerezde tutulur: çerezler silinirse sınır da kalkar.
+     Çerez yazılamıyorsa (tarayıcı kapatmışsa) yedek olarak localStorage kullanılır. */
+  function cookiesOk() {
+    try {
+      document.cookie = "opn-ct=1; path=/; SameSite=Lax";
+      var ok = document.cookie.indexOf("opn-ct=1") > -1;
+      document.cookie = "opn-ct=; max-age=0; path=/; SameSite=Lax";
+      return ok;
+    } catch (e) { return false; }
+  }
+  var useCookie = cookiesOk();
+  if (useCookie) { /* eski kayıtlar çerez silmeyi etkisiz bırakmasın */
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    try { sessionStorage.removeItem(KEY); } catch (e) {}
+  }
+  function read() {
+    var v = "";
+    if (useCookie) {
+      var m = document.cookie.match(new RegExp("(?:^|; )" + KEY + "=([^;]*)"));
+      if (m) v = decodeURIComponent(m[1]);
+    } else {
+      try { v = localStorage.getItem(KEY) || ""; } catch (e) {}
+    }
+    return v === "no" || v === "yes" ? v : "";
+  }
+  function write(v) {
+    if (useCookie) { document.cookie = KEY + "=" + v + "; max-age=31536000; path=/; SameSite=Lax"; return; }
+    try { localStorage.setItem(KEY, v); } catch (e) {}
+  }
+  /* Kapağın altındaki her şeyi tıklanamaz / odaklanamaz yap */
+  function lock(on) {
+    var i, el;
+    if (on) {
+      if (locked.length) return;
+      for (i = 0; i < document.body.children.length; i++) {
+        el = document.body.children[i];
+        if (el === ov || el.tagName === "SCRIPT" || el.tagName === "STYLE" || el.tagName === "LINK" || el.tagName === "TITLE" || el.tagName === "META") continue;
+        var hadAria = el.hasAttribute("aria-hidden");
+        el.setAttribute("inert", "");
+        if (!hadAria) el.setAttribute("aria-hidden", "true");
+        locked.push({ el: el, aria: !hadAria });
+      }
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      for (i = 0; i < locked.length; i++) {
+        locked[i].el.removeAttribute("inert");
+        if (locked[i].aria) locked[i].el.removeAttribute("aria-hidden");
+      }
+      locked = [];
+      document.documentElement.style.overflow = "";
+    }
+  }
+  function show(mode) {
+    ov.hidden = false;
+    ov.classList.toggle("blocked", mode === "block");
+    ask.hidden = mode !== "ask";
+    block.hidden = mode !== "block";
+    lock(true);
+    (mode === "ask" ? yes : block).focus();
+  }
+  function hide() { ov.hidden = true; ov.classList.remove("blocked"); lock(false); }
+
+  window.opnAgeGate = function (cb) {
+    var s = read();
+    if (s === "no") { show("block"); return; }
+    if (s === "yes") { cb(); return; }
+    pending = cb;
+    show("ask");
+  };
+  yes.addEventListener("click", function () {
+    write("yes"); hide();
+    var f = pending; pending = null;
+    if (f) f();
+  });
+  no.addEventListener("click", function () {
+    write("no"); pending = null; show("block");
+  });
+  /* Odak kapağın dışına çıkamasın (eski tarayıcılarda inert desteği yoksa) */
+  ov.addEventListener("keydown", function (e) {
+    if (e.key !== "Tab") return;
+    var btns = ask.hidden ? [] : [yes, no];
+    if (!btns.length) { e.preventDefault(); return; }
+    var i = btns.indexOf(document.activeElement);
+    e.preventDefault();
+    btns[(i + (e.shiftKey ? -1 : 1) + btns.length) % btns.length].focus();
+  });
+  /* Daha önce "hayır" denmişse site açılır açılmaz kilitli gelir */
+  if (read() === "no") show("block");
+})();
+</script>
+<script>
 /* Mağaza: ana sitenin içinde ikinci bir site gibi çalışır */
 (function () {
   var site = document.getElementById("site");
@@ -1510,8 +1639,12 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
     oHint.textContent = "";
     var total = cartTotal();
     e.preventDefault();
-    if (total == null) { window.open(waUrl(orderText()), "_blank", "noopener"); return; } /* fiyatı teklifle belirlenen ürün varsa eski akış: doğrudan WhatsApp */
-    openPay(total);
+    function proceed() {
+      if (total == null) { window.open(waUrl(orderText()), "_blank", "noopener"); return; } /* fiyatı teklifle belirlenen ürün varsa eski akış: doğrudan WhatsApp */
+      openPay(total);
+    }
+    /* Alışverişi tamamlamadan önce +18 doğrulaması */
+    if (window.opnAgeGate) window.opnAgeGate(proceed); else proceed();
   });
   var chipCart = document.getElementById("cart-chip");
   var chipText = document.getElementById("cart-chip-text");

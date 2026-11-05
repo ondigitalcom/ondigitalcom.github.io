@@ -1445,11 +1445,31 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
 
   /* ---- IBAN ile ödeme ---- */
   var payOv = document.getElementById("pay-ov");
+  var PAY_KEY = "opn-paycode", PAY_TTL = 48 * 3600 * 1000; /* kod 48 saat boyunca sabit kalır */
   var payCode = "";
   function newCode() {
     var chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", c = "";
     for (var i = 0; i < 5; i++) c += chars.charAt(Math.floor(Math.random() * chars.length));
     return "OPN-" + c;
+  }
+  /* Kod sayfa yenilense / çıkıp girilse de kaybolmasın: localStorage, olmazsa sessionStorage, o da olmazsa çerez */
+  function readCode() {
+    var raw = null;
+    try { raw = localStorage.getItem(PAY_KEY); } catch (e) {}
+    if (!raw) { try { raw = sessionStorage.getItem(PAY_KEY); } catch (e) {} }
+    if (!raw) { var m = document.cookie.match(new RegExp("(?:^|; )" + PAY_KEY + "=([^;]*)")); if (m) raw = decodeURIComponent(m[1]); }
+    if (!raw) return "";
+    try {
+      var o = JSON.parse(raw);
+      if (o && /^OPN-[A-Z0-9]{5}$/.test(o.c) && Date.now() - o.t < PAY_TTL) return o.c;
+    } catch (e) {}
+    return "";
+  }
+  function writeCode(c) {
+    var raw = JSON.stringify({ c: c, t: Date.now() });
+    try { localStorage.setItem(PAY_KEY, raw); } catch (e) {}
+    try { sessionStorage.setItem(PAY_KEY, raw); } catch (e) {}
+    try { document.cookie = PAY_KEY + "=" + encodeURIComponent(raw) + "; max-age=" + (PAY_TTL / 1000) + "; path=/; SameSite=Lax"; } catch (e) {}
   }
   function cartTotal() {
     var ls = lines(), t = 0, ok = ls.length > 0;
@@ -1457,7 +1477,8 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
     return ok ? t : null;
   }
   function openPay(total) {
-    if (!payCode) payCode = newCode();
+    if (!payCode) payCode = readCode();
+    if (!payCode) { payCode = newCode(); writeCode(payCode); }
     document.getElementById("pay-code").textContent = payCode;
     document.getElementById("pay-amount").textContent = fmt(total);
     var msg = orderText() + "\n\nÖdemeyi yaptım.\nAçıklama kodu: " + payCode;

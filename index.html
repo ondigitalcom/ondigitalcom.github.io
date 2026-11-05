@@ -567,6 +567,22 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
 .cart-empty { color: var(--muted); font-size: 0.95rem; }
 .cart-total { display: flex; justify-content: space-between; gap: 1rem; font-weight: 600; }
 .order-actions { display: grid; gap: 0.6rem; }
+/* ---- IBAN ödeme penceresi ---- */
+.pay-ov { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 16px; background: rgba(8, 12, 24, 0.6); }
+.pay-ov[hidden] { display: none; }
+.pay-box { width: min(440px, 100%); max-height: calc(100dvh - 32px); overflow: auto; display: grid; gap: 0.9rem; padding: 1.25rem; background: var(--surface); color: var(--fg); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.6); }
+.pay-box h3 { margin: 0; font-size: 1.15rem; }
+.pay-box p { margin: 0; font-size: 0.9rem; color: var(--muted); line-height: 1.5; }
+.pay-rows { display: grid; gap: 0.5rem; }
+.pay-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 0.5rem 0.75rem; padding: 0.65rem 0.75rem; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
+.pay-row small { grid-column: 1 / -1; font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.pay-row b { font-family: var(--f-mono); font-size: 0.88rem; font-weight: 500; overflow-wrap: anywhere; min-width: 0; }
+.pay-row.code { border-color: var(--accent); background: var(--accent-soft); }
+.pay-row.code b { font-size: 1.05rem; font-weight: 600; }
+.pay-copy { font: inherit; font-size: 0.8rem; font-weight: 600; padding: 0.4rem 0.7rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--fg); cursor: pointer; }
+.pay-copy:hover { background: var(--surface-2); }
+.pay-actions { display: grid; gap: 0.6rem; }
+.pay-actions .btn { text-align: center; }
 .order-note { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
 
 .shop-welcome { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 1rem; background: var(--bg); text-align: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
@@ -884,6 +900,22 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
     <span class="sw-top">Kazançlarımızın üçte biri sokak hayvanlarına gidiyor.</span>
     <span class="wm" aria-hidden="true"><span>O</span><span>P</span><span class="dash"></span><span>N</span></span>
     <p>Digital Mağazamıza hoşgeldiniz!</p>
+  </div>
+</div>
+<div class="pay-ov" id="pay-ov" hidden>
+  <div class="pay-box" role="dialog" aria-modal="true" aria-labelledby="pay-title">
+    <h3 id="pay-title">Ödeme bilgileri</h3>
+    <p>Havale/EFT ile ödemeyi yapın. <b>Açıklama</b> kısmına aşağıdaki kodu mutlaka yazın, sonra WhatsApp'tan bize bildirin.</p>
+    <div class="pay-rows">
+      <div class="pay-row"><small>Alıcı</small><b id="pay-name">Süleyman Anıl Ateş</b><button class="pay-copy" type="button" data-copy="pay-name">Kopyala</button></div>
+      <div class="pay-row"><small>IBAN</small><b id="pay-iban">TR38 0006 2000 3130 0006 8592 82</b><button class="pay-copy" type="button" data-copy="pay-iban" data-raw="TR380006200031300006859282">Kopyala</button></div>
+      <div class="pay-row"><small>Tutar</small><b id="pay-amount"></b><button class="pay-copy" type="button" data-copy="pay-amount">Kopyala</button></div>
+      <div class="pay-row code"><small>Açıklama kodu</small><b id="pay-code"></b><button class="pay-copy" type="button" data-copy="pay-code">Kopyala</button></div>
+    </div>
+    <div class="pay-actions">
+      <a class="btn btn-primary" id="pay-wa" href="#">Ödemeyi yaptım, WhatsApp'ta bildir</a>
+      <button class="btn btn-ghost" id="pay-close" type="button">Kapat</button>
+    </div>
   </div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1381,9 +1413,8 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
     if (allPriced) text += "\n\nToplam: " + fmt(total);
     return text;
   }
-  function updateLinks() {
-    oWa.href = "https://wa.me/905399443067?text=" + encodeURIComponent(orderText());
-  }
+  function waUrl(text) { return "https://wa.me/905399443067?text=" + encodeURIComponent(text); }
+  function updateLinks() { /* "Alışverişi tamamla" artık dış bağlantı taşımaz; yönlendirme tıklanınca yapılır */ }
   function render() {
     var ls = lines(), count = 0, total = 0, allPriced = ls.length > 0;
     oHint.textContent = "";
@@ -1412,10 +1443,54 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
     updateLinks();
   }
 
+  /* ---- IBAN ile ödeme ---- */
+  var payOv = document.getElementById("pay-ov");
+  var payCode = "";
+  function newCode() {
+    var chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", c = "";
+    for (var i = 0; i < 5; i++) c += chars.charAt(Math.floor(Math.random() * chars.length));
+    return "OPN-" + c;
+  }
+  function cartTotal() {
+    var ls = lines(), t = 0, ok = ls.length > 0;
+    ls.forEach(function (l) { if (l.p.price == null) ok = false; else t += l.p.price * l.q; });
+    return ok ? t : null;
+  }
+  function openPay(total) {
+    if (!payCode) payCode = newCode();
+    document.getElementById("pay-code").textContent = payCode;
+    document.getElementById("pay-amount").textContent = fmt(total);
+    var msg = orderText() + "\n\nÖdemeyi yaptım.\nAçıklama kodu: " + payCode;
+    document.getElementById("pay-wa").href = waUrl(msg);
+    payOv.hidden = false;
+    document.getElementById("pay-wa").focus();
+  }
+  function closePay() { payOv.hidden = true; oWa.focus(); }
+  function copyText(t) {
+    if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(t);
+    return new Promise(function (res, rej) {
+      var ta = document.createElement("textarea"); ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      var ok = false; try { ok = document.execCommand("copy"); } catch (x) {}
+      document.body.removeChild(ta); ok ? res() : rej();
+    });
+  }
+  payOv.addEventListener("click", function (e) {
+    if (e.target === payOv || e.target.id === "pay-close") { closePay(); return; }
+    var b = e.target.closest ? e.target.closest(".pay-copy") : null;
+    if (!b) return;
+    var t = b.getAttribute("data-raw") || document.getElementById(b.getAttribute("data-copy")).textContent;
+    copyText(t).then(function () { window.opnToast("Kopyalandı"); }, function () { window.opnToast("Kopyalanamadı, elle seçip kopyalayın"); });
+  });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !payOv.hidden) closePay(); });
+
   oWa.addEventListener("click", function (e) {
     if (!lines().length) { e.preventDefault(); oHint.textContent = "Önce sepete bir ürün ekleyin."; return; }
-    updateLinks();
     oHint.textContent = "";
+    var total = cartTotal();
+    e.preventDefault();
+    if (total == null) { window.open(waUrl(orderText()), "_blank", "noopener"); return; } /* fiyatı teklifle belirlenen ürün varsa eski akış: doğrudan WhatsApp */
+    openPay(total);
   });
   var chipCart = document.getElementById("cart-chip");
   var chipText = document.getElementById("cart-chip-text");

@@ -380,6 +380,17 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
 .social-link { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.85rem 0.4rem 0.45rem; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--fg); font-size: 0.8125rem; font-weight: 500; text-decoration: none; }
 .social-link:hover { border-color: var(--accent); }
 .social-link svg { width: 1.75rem; height: 1.75rem; padding: 0.4rem; border-radius: 50%; background: var(--accent); color: var(--accent-fg); flex: none; }
+/* Dar telefon ekranlarında üç bağlantı (WhatsApp, E-posta, Instagram) tek satıra sığsın */
+@media (max-width: 440px) {
+  .social { gap: 0.35rem; }
+  .social-link { gap: 0.35rem; padding: 0.35rem 0.6rem 0.35rem 0.35rem; font-size: 0.78rem; }
+  .social-link svg { width: 1.6rem; height: 1.6rem; padding: 0.35rem; }
+}
+@media (max-width: 370px) {
+  .social { gap: 0.25rem; }
+  .social-link { gap: 0.25rem; padding: 0.3rem 0.45rem 0.3rem 0.3rem; font-size: 0.72rem; }
+  .social-link svg { width: 1.4rem; height: 1.4rem; padding: 0.3rem; }
+}
 .copyright { margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--line); font-family: var(--f-mono); font-size: clamp(0.55rem, 2.9vw, 0.78rem); letter-spacing: 0.04em; color: var(--muted); text-align: center; white-space: nowrap; }
 
 /* Müşteri hizmetleri baloncuğu */
@@ -953,6 +964,10 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
       <span class="wm"><span>O</span><span>P</span><span class="dash"></span><span>N</span></span>
       <p>OP-N Digital · Web sitesi kurulumu, isteğe özel tasarım, mobil ve PC uyumlu siteler.</p>
       <div class="social" aria-label="Bize ulaşın">
+        <a class="social-link" href="https://www.instagram.com/opndigitall?dlrf=aW4xamZzMDh0cGJi&amp;utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="0.6"/></svg>
+          <span>Instagram</span>
+        </a>
         <a class="social-link" href="https://wa.me/905399443067">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z"/></svg>
           <span>WhatsApp</span>
@@ -960,10 +975,6 @@ footer { border-top: 1px solid var(--line); padding-block: 2rem 2.5rem; }
         <a class="social-link" href="mailto:opancial@icloud.com">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
           <span>E-posta</span>
-        </a>
-        <a class="social-link" href="https://www.instagram.com/opndigitall?dlrf=aW4xamZzMDh0cGJi&amp;utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="0.6"/></svg>
-          <span>Instagram</span>
         </a>
       </div>
     </div>
